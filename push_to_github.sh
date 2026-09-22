@@ -1,50 +1,45 @@
 #!/bin/bash
-# Push script to publish code to your GitHub account for 24/7 GitHub Pages Hosting
+# Push script to publish code to your GitHub account (practise9391-prog) for 24/7 GitHub Pages Hosting
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$DIR"
 
+GITHUB_USER="practise9391-prog"
+REPO_NAME="onepiece-fan-site"
+
 echo "=========================================================="
 echo "⚓ ONE PIECE FAN SITE — PUSH TO GITHUB & 24/7 LIVE HOSTING"
 echo "=========================================================="
-echo ""
-echo "Detected GitHub Username: PavanKumar-Tech9391 (practise9391@gmail.com)"
-echo ""
-echo "Step 1: Make sure the repository exists on GitHub:"
-echo "  👉 Open in your browser: https://github.com/new"
-echo "  👉 Repository Name: onepiece-fan-site"
-echo "  👉 Visibility: Public"
-echo "  👉 Click 'Create repository' (Do not add README/license)"
-echo ""
-echo "Step 2: Authentication Option:"
-echo "  If you have a GitHub Personal Access Token (classic with repo scope):"
-echo "  You can paste your token directly, or your repo URL."
-echo "  (To create a token: https://github.com/settings/tokens -> Generate new token -> select 'repo')"
-echo "=========================================================="
+echo "Account: $GITHUB_USER"
 echo ""
 
 if [ -n "$1" ]; then
   INPUT="$1"
 else
-  read -p "Paste your Repository URL or GitHub Personal Access Token: " INPUT
+  echo "Enter one of the following:"
+  echo "1. Your GitHub Personal Access Token (starts with ghp_...)"
+  echo "   (Generate in 20 sec at: https://github.com/settings/tokens/new with 'repo' scope)"
+  echo "2. OR press ENTER to push using standard git credentials:"
+  read -p "Token or URL [press ENTER to use standard push]: " INPUT
 fi
 
-if [ -z "$INPUT" ]; then
-  echo "❌ Error: No input provided."
-  exit 1
-fi
-
-# Check if input is a token (starts with ghp_ or 40-character hex) or full URL
 if [[ "$INPUT" =~ ^ghp_ ]] || [[ ${#INPUT} -ge 35 && ! "$INPUT" =~ ^https?:// ]]; then
-  echo "🔑 Personal Access Token detected! Configuring remote with token..."
-  REPO_URL="https://${INPUT}@github.com/PavanKumar-Tech9391/onepiece-fan-site.git"
+  echo "🔑 Personal Access Token detected!"
+  # Also attempt to create repository via API if it does not exist yet!
+  echo "Checking/creating repository '$REPO_NAME' on GitHub..."
+  curl -s -X POST -H "Authorization: token $INPUT" \
+       -H "Accept: application/vnd.github.v3+json" \
+       https://api.github.com/user/repos \
+       -d "{\"name\":\"$REPO_NAME\",\"public\":true,\"description\":\"Ultra-Premium One Piece Fan Site\"}" > /dev/null 2>&1
+  
+  REPO_URL="https://${INPUT}@github.com/${GITHUB_USER}/${REPO_NAME}.git"
 elif [[ "$INPUT" =~ ^https://github.com ]]; then
   REPO_URL="$INPUT"
 else
-  REPO_URL="https://github.com/PavanKumar-Tech9391/$INPUT.git"
+  REPO_URL="https://github.com/${GITHUB_USER}/${REPO_NAME}.git"
 fi
 
-echo "Setting remote origin to: ${REPO_URL%%@*}@github.com/..."
+echo "Setting remote origin to https://github.com/${GITHUB_USER}/${REPO_NAME}.git"
 git remote remove origin 2>/dev/null || true
 git remote add origin "$REPO_URL"
 git branch -M main
@@ -56,20 +51,20 @@ if git push -u origin main; then
   echo "🎉 SUCCESS! Your code has been pushed to GitHub!"
   echo "=========================================================="
   echo ""
-  echo "NEXT (AND FINAL) STEP TO ACTIVATE 24/7 LIVE WEBSITE:"
-  echo "1. Go to: https://github.com/PavanKumar-Tech9391/onepiece-fan-site/settings/pages"
+  echo "FINAL STEP TO ACTIVATE 24/7 LIVE SITE:"
+  echo "1. Go to: https://github.com/${GITHUB_USER}/${REPO_NAME}/settings/pages"
   echo "2. Under 'Build and deployment' -> 'Source':"
-  echo "   Change 'Deploy from a branch' to 👉 'GitHub Actions'"
+  echo "   Change to 👉 'GitHub Actions'"
   echo ""
-  echo "✨ Once selected, your site will deploy automatically within 60 seconds at:"
-  echo "👉 https://PavanKumar-Tech9391.github.io/onepiece-fan-site/"
+  echo "✨ Once saved, your site will be permanently live at:"
+  echo "👉 https://${GITHUB_USER}.github.io/${REPO_NAME}/"
   echo ""
-  echo "🌍 This link will work 24/7 on any mobile phone, tablet, or PC worldwide"
-  echo "   even if your laptop is powered off and Wi-Fi is disconnected!"
+  echo "🌍 This link works 24/7 on every phone in the world,"
+  echo "   even if your laptop is powered off and disconnected!"
   echo "=========================================================="
 else
   echo ""
-  echo "⚠️ Push failed. Please verify that:"
-  echo "1. The repository 'onepiece-fan-site' was created at https://github.com/new"
-  echo "2. You entered the correct GitHub credentials or Personal Access Token"
+  echo "⚠️ Push was not completed. If you haven't created the repository yet:"
+  echo "1. Open https://github.com/new and create repo: $REPO_NAME (Public)"
+  echo "2. Re-run ./push_to_github.sh with your token"
 fi
