@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+    background-color: #030712;
+  }
+
+  body {
+    cursor: default;
+    background-color: #030712;
+    color: #f3f4f6;
+    overflow-x: hidden;
+  }
+
+  /* Custom subtle scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0b0f19;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #d97706;
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #f59e0b;
+  }
+}
+
+@layer utilities {
+  .text-glow-gold {
+    text-shadow: 0 0 20px rgba(245, 158, 11, 0.6), 0 0 40px rgba(245, 158, 11, 0.3);
+  }
+  .text-glow-nika {
+    text-shadow: 0 0 25px rgba(255, 255, 255, 0.9), 0 0 50px rgba(250, 204, 21, 0.6);
+  }
+  .text-glow-zoro {
+    text-shadow: 0 0 20px rgba(16, 185, 129, 0.8), 0 0 40px rgba(5, 150, 105, 0.4);
+  }
+  .text-glow-flame {
+    text-shadow: 0 0 20px rgba(239, 68, 68, 0.8), 0 0 45px rgba(249, 115, 22, 0.6);
+  }
+  .text-glow-purple {
+    text-shadow: 0 0 20px rgba(168, 85, 247, 0.8), 0 0 45px rgba(147, 51, 234, 0.5);
+  }
+  
+  .glass-card {
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  
+  .glass-card-hover {
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .glass-card-hover:hover {
+    transform: translateY(-6px) scale(1.01);
+    box-shadow: 0 20px 40px -15px rgba(245, 158, 11, 0.25);
+    border-color: rgba(245, 158, 11, 0.3);
+  }
+
+  /* Parallax perspective wrapper */
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+  
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+}
