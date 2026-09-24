@@ -473,3 +473,4 @@ export const WeaponsEncyclopedia: React.FC = () => {
     </section>
   );
 };
+

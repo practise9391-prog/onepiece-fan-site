@@ -146,3 +146,4 @@ export const QuotesSanctuary: React.FC = () => {
     </section>
   );
 };
+

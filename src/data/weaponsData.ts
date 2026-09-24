@@ -303,3 +303,4 @@ export const STRAW_HAT_WEAPONS: StrawHatWeapon[] = [
     themeColor: '#8b5cf6'
   }
 ];
+

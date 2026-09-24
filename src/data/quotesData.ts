@@ -170,3 +170,4 @@ export const POPULAR_QUOTES: QuoteItem[] = [
     accentColor: '#6366f1'
   }
 ];
+

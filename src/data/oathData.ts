@@ -188,3 +188,4 @@ export const PIRATE_KING_OATHS: CrewOath[] = [
     themeColor: '#ef4444'
   }
 ];
+
