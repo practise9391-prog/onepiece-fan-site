@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
 import {
   HASHIRA_PILLARS,
+  TANJIRO_AND_FRIENDS,
   BREATHING_STYLES,
   TWELVE_KIZUKI,
   DEMON_SLAYER_ARCS,
   DEMON_SLAYER_QUOTES,
   NICHIRIN_BLADES,
   DEMON_SLAYER_OATH,
-  HashiraMember,
+  CharacterProfile,
   DemonSlayerArc
 } from './data/demonSlayerData';
 import { universeAudio } from '../anime-universe/audio/universeAudio';
 import { DemonSlayerIntro } from './components/intro/DemonSlayerIntro';
 import { DemonSlayerTransition } from './components/intro/DemonSlayerTransition';
+import { TanjiroHero } from './components/hero/TanjiroHero';
 import {
   Flame,
   Droplets,
@@ -36,21 +38,21 @@ import {
   Check
 } from 'lucide-react';
 
-export type DemonSlayerView = 'hashira' | 'breathing' | 'demons' | 'arcs' | 'quotes' | 'blades' | 'oath';
+export type DemonSlayerView = 'home' | 'arcs' | 'hashira' | 'slayers' | 'breathing' | 'demons' | 'blades' | 'quotes' | 'oath';
 
 export const DemonSlayerApp: React.FC = () => {
   const [stage, setStage] = useState<'intro' | 'transition' | 'main'>('intro');
-  const [currentView, setCurrentView] = useState<DemonSlayerView>('hashira');
-  const [selectedHashira, setSelectedHashira] = useState<HashiraMember | null>(null);
+  const [currentView, setCurrentView] = useState<DemonSlayerView>('home');
+  const [selectedCharacter, setSelectedCharacter] = useState<CharacterProfile | null>(null);
   const [showFamilyModal, setShowFamilyModal] = useState<boolean>(false);
   const [selectedArc, setSelectedArc] = useState<DemonSlayerArc | null>(null);
   const [activeBreathing, setActiveBreathing] = useState(BREATHING_STYLES[0]);
   const [copiedQuoteId, setCopiedQuoteId] = useState<string | null>(null);
   const [isAudioMuted, setIsAudioMuted] = useState(universeAudio.getIsMuted());
 
-  const handleNavigate = (view: DemonSlayerView) => {
+  const handleNavigate = (view: string) => {
     universeAudio.playClick(500, 0.08);
-    setCurrentView(view);
+    setCurrentView(view as DemonSlayerView);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -90,8 +92,8 @@ export const DemonSlayerApp: React.FC = () => {
       {/* STAGE 3: MAIN DEMON SLAYER SANCTUARY */}
       {stage === 'main' && (
         <>
-          {/* Top Demon Slayer Navbar */}
-          <header className="sticky top-0 z-40 bg-black/90 backdrop-blur-xl border-b border-red-500/25 px-4 sm:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4 shadow-[0_4px_30px_rgba(0,0,0,0.8)]">
+          {/* Top Demon Slayer Navbar (HUD Style Matching One Piece) */}
+          <header className="sticky top-0 z-40 bg-black/90 backdrop-blur-xl border-b border-red-500/25 px-4 sm:px-8 py-3 flex flex-wrap items-center justify-between gap-4 shadow-[0_4px_30px_rgba(0,0,0,0.8)]">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-red-600 to-amber-500 p-0.5 shadow-lg shadow-red-500/30">
                 <div className="w-full h-full rounded-2xl bg-black flex items-center justify-center">
@@ -111,17 +113,19 @@ export const DemonSlayerApp: React.FC = () => {
             {/* Navigation Tabs */}
             <nav className="flex flex-wrap items-center gap-1 bg-slate-950/80 p-1.5 rounded-full border border-white/10 text-xs font-mono font-bold">
               {[
-                { id: 'hashira', label: 'CORPS & HASHIRA' },
-                { id: 'arcs', label: 'STORY ARCS (20 SCENES)' },
+                { id: 'home', label: 'HOME' },
+                { id: 'arcs', label: '12 STORY ARCS' },
+                { id: 'hashira', label: 'THE 9 HASHIRA' },
+                { id: 'slayers', label: 'TANJIRO & FRIENDS' },
                 { id: 'breathing', label: 'BREATHING STYLES' },
                 { id: 'demons', label: 'TWELVE KIZUKI' },
-                { id: 'quotes', label: 'QUOTES SANCTUARY' },
                 { id: 'blades', label: 'NICHIRIN BLADES' },
+                { id: 'quotes', label: 'QUOTES' },
                 { id: 'oath', label: 'SACRED OATH' }
               ].map((tab) => (
                 <button
                   key={tab.id}
-                  onClick={() => handleNavigate(tab.id as DemonSlayerView)}
+                  onClick={() => handleNavigate(tab.id)}
                   className={`px-3.5 py-1.5 rounded-full transition cursor-pointer ${
                     currentView === tab.id
                       ? 'bg-red-600 text-white shadow-lg shadow-red-600/40 font-black'
@@ -154,24 +158,124 @@ export const DemonSlayerApp: React.FC = () => {
           </header>
 
           {/* MAIN CONTENT AREA */}
-          <main className="relative z-10 flex-1 max-w-7xl mx-auto px-4 sm:px-8 py-10 w-full space-y-16">
-            {/* VIEW 1: CORPS & HASHIRA (CHARACTER SANCTUARY) */}
+          <main className="relative z-10 flex-1 max-w-7xl mx-auto px-4 sm:px-8 py-8 w-full space-y-16">
+            {/* VIEW 0: HOME — TANJIRO HERO (Matching One Piece Gear 5 Hero) */}
+            {currentView === 'home' && (
+              <TanjiroHero onNavigate={handleNavigate} />
+            )}
+
+            {/* VIEW 1: THE 12 STORY ARCS IN ORDER (All 3 Parts) */}
+            {currentView === 'arcs' && (
+              <section className="space-y-12 animate-fadeIn">
+                <div className="text-center space-y-3">
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-mono font-bold tracking-widest uppercase">
+                    <Scroll className="w-3.5 h-3.5 text-red-400" />
+                    <span>THE 12 STORY ARCS IN CHRONOLOGICAL ORDER • 20 SCENES EACH</span>
+                  </div>
+                  <h2 className="font-cinzel text-3xl sm:text-5xl font-black text-white">
+                    Chronicles of Kimetsu no Yaiba
+                  </h2>
+                  <p className="text-sm text-slate-400 max-w-3xl mx-auto">
+                    From Tanjiro’s tragedy on Mount Kumotori through the high-stakes battles with the Hashira to the decisive sunrise against Muzan Kibutsuji.
+                  </p>
+                </div>
+
+                {/* Sagas Loop: Part 1, Part 2, Part 3 */}
+                {[
+                  {
+                    partTitle: 'Part 1: Tanjiro\'s Beginnings (Anime Season 1)',
+                    arcs: DEMON_SLAYER_ARCS.slice(0, 6),
+                    badgeColor: 'border-blue-500/40 text-blue-400 bg-blue-950/60'
+                  },
+                  {
+                    partTitle: 'Part 2: High-Stakes Battles (Anime Seasons 2–4)',
+                    arcs: DEMON_SLAYER_ARCS.slice(6, 10),
+                    badgeColor: 'border-amber-500/40 text-amber-400 bg-amber-950/60'
+                  },
+                  {
+                    partTitle: 'Part 3: The Final Battle Saga (Infinity Castle & Sunrise Countdown)',
+                    arcs: DEMON_SLAYER_ARCS.slice(10, 12),
+                    badgeColor: 'border-red-500/40 text-red-400 bg-red-950/60'
+                  }
+                ].map((sagaGroup, gIdx) => (
+                  <div key={gIdx} className="space-y-6">
+                    <div className="flex items-center gap-3 border-b border-white/10 pb-3">
+                      <span className={`px-3 py-1 rounded-full text-xs font-mono font-bold uppercase border ${sagaGroup.badgeColor}`}>
+                        {sagaGroup.partTitle}
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {sagaGroup.arcs.map((arc) => (
+                        <div
+                          key={arc.id}
+                          onClick={() => {
+                            universeAudio.playBladeSlash();
+                            setSelectedArc(arc);
+                          }}
+                          className="group relative rounded-3xl bg-slate-950/80 border border-white/10 hover:border-red-500/60 p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 shadow-xl hover:shadow-[0_0_35px_rgba(239,68,68,0.3)] cursor-pointer"
+                        >
+                          <div className="space-y-4">
+                            <div className="relative w-full h-48 rounded-2xl overflow-hidden bg-black/60 border border-white/5 flex items-center justify-center">
+                              <img
+                                src={arc.image}
+                                alt={arc.title}
+                                className="w-full h-full object-contain filter group-hover:scale-105 transition-transform duration-500"
+                                onError={(e) => {
+                                  (e.target as HTMLImageElement).src = './images/demon-slayer/tanjiro.png';
+                                }}
+                              />
+                              <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-black/80 border border-red-500/40 text-[10px] font-mono text-red-400 font-bold">
+                                {arc.chapters}
+                              </div>
+                            </div>
+
+                            <div>
+                              <div className="text-xs font-mono text-red-400 font-bold">
+                                {arc.japaneseTitle} • {arc.episodes}
+                              </div>
+                              <h3 className="font-cinzel text-xl font-bold text-white mt-1">
+                                {arc.title}
+                              </h3>
+                            </div>
+
+                            <p className="text-xs text-slate-300 line-clamp-3 leading-relaxed">
+                              {arc.synopsis}
+                            </p>
+
+                            <div className="p-2.5 rounded-xl bg-black/50 border border-white/10 text-xs text-slate-300">
+                              <strong className="text-amber-400">Key Clash:</strong> {arc.keyClash}
+                            </div>
+                          </div>
+
+                          <div className="pt-4 mt-4 border-t border-white/10 flex items-center justify-between text-xs font-mono text-red-400 font-bold">
+                            <span>EXPLORE 20 PLOT SCENES</span>
+                            <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </section>
+            )}
+
+            {/* VIEW 2: THE 9 HASHIRA PILLARS */}
             {currentView === 'hashira' && (
               <section className="space-y-10 animate-fadeIn">
                 <div className="text-center space-y-3">
                   <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-mono font-bold tracking-widest uppercase">
-                    <Swords className="w-3.5 h-3.5 text-red-400" />
-                    <span>DEMON SLAYER CORPS PILLARS & INHERITORS</span>
+                    <Users className="w-3.5 h-3.5 text-red-400" />
+                    <span>THE SUPREME PILLARS OF HUMANITY</span>
                   </div>
                   <h2 className="font-cinzel text-3xl sm:text-5xl font-black text-white">
-                    The Pillars of Humanity
+                    The Nine Hashira Pillars (九柱)
                   </h2>
                   <p className="text-sm text-slate-400 max-w-2xl mx-auto">
-                    The highest-ranking combatants of the Demon Slayer Corps. Each has honed their breathing to perfection, standing between innocent humanity and eternal darkness.
+                    The highest-ranking warriors of the Demon Slayer Corps. Each has honed a distinct breathing discipline to extreme perfection.
                   </p>
                 </div>
 
-                {/* Character Cards Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {HASHIRA_PILLARS.map((char) => (
                     <div
@@ -179,7 +283,6 @@ export const DemonSlayerApp: React.FC = () => {
                       className="group relative rounded-3xl bg-slate-950/80 border border-white/10 hover:border-red-500/50 p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 shadow-xl hover:shadow-[0_0_35px_rgba(239,68,68,0.25)]"
                     >
                       <div className="space-y-4">
-                        {/* Portrait Frame */}
                         <div className="relative w-full h-64 rounded-2xl overflow-hidden bg-black/60 border border-white/5 flex items-center justify-center">
                           <img
                             src={char.image}
@@ -190,14 +293,13 @@ export const DemonSlayerApp: React.FC = () => {
                             }}
                           />
                           <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-black/80 border border-red-500/40 text-[10px] font-mono text-red-400 uppercase font-black">
-                            {char.breathingStyle.split(' ')[0]}
+                            {char.title}
                           </div>
                         </div>
 
-                        {/* Title & Info */}
                         <div>
                           <div className="text-xs font-mono text-red-400 font-bold">
-                            {char.japaneseName} • {char.title}
+                            {char.japaneseName}
                           </div>
                           <h3 className="font-cinzel text-2xl font-bold text-white mt-1">
                             {char.name}
@@ -208,7 +310,6 @@ export const DemonSlayerApp: React.FC = () => {
                           {char.description}
                         </p>
 
-                        {/* Power System Badge */}
                         <div className="p-3 rounded-xl bg-black/60 border border-white/10 space-y-1">
                           <div className="text-[10px] font-mono text-amber-400 uppercase font-bold flex items-center gap-1.5">
                             <Sparkles className="w-3 h-3" /> MARK STATUS:
@@ -217,18 +318,17 @@ export const DemonSlayerApp: React.FC = () => {
                         </div>
                       </div>
 
-                      {/* Interactive Actions */}
                       <div className="pt-5 mt-4 border-t border-white/10 flex items-center justify-between gap-3">
                         <button
                           onClick={() => {
                             universeAudio.playBladeSlash();
-                            setSelectedHashira(char);
+                            setSelectedCharacter(char);
                             setShowFamilyModal(true);
                           }}
                           className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-300 hover:text-white border border-red-500/30 text-xs font-mono font-bold tracking-wider uppercase transition cursor-pointer shadow-lg"
                         >
                           <Users className="w-3.5 h-3.5" />
-                          <span>FAMILY & MENTORS</span>
+                          <span>FAMILY & MENTORS TREE</span>
                         </button>
                       </div>
                     </div>
@@ -237,68 +337,76 @@ export const DemonSlayerApp: React.FC = () => {
               </section>
             )}
 
-            {/* VIEW 2: STORY ARCS (20 SCENES PER ARC) */}
-            {currentView === 'arcs' && (
+            {/* VIEW 3: TANJIRO & FRIENDS (MAIN PROTAGONISTS) */}
+            {currentView === 'slayers' && (
               <section className="space-y-10 animate-fadeIn">
                 <div className="text-center space-y-3">
                   <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-mono font-bold tracking-widest uppercase">
-                    <Scroll className="w-3.5 h-3.5 text-red-400" />
-                    <span>CHRONICLES OF DESTINY • 20 SCENES PER SAGA</span>
+                    <Swords className="w-3.5 h-3.5 text-red-400" />
+                    <span>THE KAMABOKO SQUAD & PROTAGONISTS</span>
                   </div>
                   <h2 className="font-cinzel text-3xl sm:text-5xl font-black text-white">
-                    Demon Slayer Story Sagas
+                    Tanjiro & His Comrades
                   </h2>
                   <p className="text-sm text-slate-400 max-w-2xl mx-auto">
-                    Click any arc to enter the theater and explore all 20 cinematic story plot scenes, taglines, concise plots, and motivational lessons.
+                    The indomitable young warriors whose unbreakable bonds, unique combat styles, and shared suffering changed the fate of the Demon Slayer Corps.
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {DEMON_SLAYER_ARCS.map((arc) => (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {TANJIRO_AND_FRIENDS.map((char) => (
                     <div
-                      key={arc.id}
-                      onClick={() => {
-                        universeAudio.playBladeSlash();
-                        setSelectedArc(arc);
-                      }}
-                      className="group relative rounded-3xl bg-slate-950/80 border border-white/10 hover:border-red-500/60 p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 shadow-xl hover:shadow-[0_0_35px_rgba(239,68,68,0.3)] cursor-pointer"
+                      key={char.id}
+                      className="group relative rounded-3xl bg-slate-950/80 border border-white/10 hover:border-red-500/50 p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 shadow-xl hover:shadow-[0_0_35px_rgba(239,68,68,0.25)]"
                     >
                       <div className="space-y-4">
-                        <div className="relative w-full h-52 rounded-2xl overflow-hidden bg-black/60 border border-white/5 flex items-center justify-center">
+                        <div className="relative w-full h-64 rounded-2xl overflow-hidden bg-black/60 border border-white/5 flex items-center justify-center">
                           <img
-                            src={arc.image}
-                            alt={arc.title}
+                            src={char.image}
+                            alt={char.name}
                             className="w-full h-full object-contain filter group-hover:scale-105 transition-transform duration-500"
                             onError={(e) => {
                               (e.target as HTMLImageElement).src = './images/demon-slayer/tanjiro.png';
                             }}
                           />
-                          <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-black/80 border border-red-500/40 text-[10px] font-mono text-red-400 font-bold">
-                            {arc.episodes}
+                          <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-black/80 border border-red-500/40 text-[10px] font-mono text-red-400 uppercase font-black">
+                            {char.title}
                           </div>
                         </div>
 
                         <div>
                           <div className="text-xs font-mono text-red-400 font-bold">
-                            {arc.japaneseTitle} • {arc.subtitle}
+                            {char.japaneseName}
                           </div>
                           <h3 className="font-cinzel text-2xl font-bold text-white mt-1">
-                            {arc.title}
+                            {char.name}
                           </h3>
                         </div>
 
                         <p className="text-xs text-slate-300 line-clamp-3 leading-relaxed">
-                          {arc.synopsis}
+                          {char.description}
                         </p>
 
-                        <div className="p-3 rounded-xl bg-black/50 border border-white/10 text-xs text-slate-300">
-                          <strong className="text-amber-400">Key Clash:</strong> {arc.keyClash}
+                        <div className="p-3 rounded-xl bg-black/60 border border-white/10 space-y-1">
+                          <div className="text-[10px] font-mono text-amber-400 uppercase font-bold flex items-center gap-1.5">
+                            <Sparkles className="w-3 h-3" /> STYLE & FORMS:
+                          </div>
+                          <div className="text-xs text-slate-200">{char.signatureForms.join(' • ')}</div>
                         </div>
                       </div>
 
-                      <div className="pt-4 mt-4 border-t border-white/10 flex items-center justify-between text-xs font-mono text-red-400 font-bold">
-                        <span>EXPLORE 20 PLOT SCENES</span>
-                        <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      <div className="pt-5 mt-4 border-t border-white/10 flex items-center justify-between gap-3">
+                        <button
+                          onClick={() => {
+                            universeAudio.playBladeSlash();
+                            setSelectedCharacter(char);
+                            setShowFamilyModal(true);
+                          }}
+                          className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-red-600/20 hover:bg-red-600 text-red-300 hover:text-white border border-red-500/30 text-xs font-mono font-bold tracking-wider uppercase transition cursor-pointer shadow-lg"
+                        >
+                          <Users className="w-3.5 h-3.5" />
+                          <span>FAMILY & MENTORS TREE</span>
+                        </button>
                       </div>
                     </div>
                   ))}
@@ -306,13 +414,13 @@ export const DemonSlayerApp: React.FC = () => {
               </section>
             )}
 
-            {/* VIEW 3: BREATHING STYLES ENCYCLOPEDIA */}
+            {/* VIEW 4: BREATHING STYLES ENCYCLOPEDIA */}
             {currentView === 'breathing' && (
               <section className="space-y-10 animate-fadeIn">
                 <div className="text-center space-y-3">
                   <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-mono font-bold tracking-widest uppercase">
                     <Wind className="w-3.5 h-3.5 text-red-400" />
-                    <span>SACRED BREATHING SYSTEM OF THE SENGOKU ERA</span>
+                    <span>SACRED BREATHING STYLES & ESOTERIC FORMS</span>
                   </div>
                   <h2 className="font-cinzel text-3xl sm:text-5xl font-black text-white">
                     Breathing Styles Encyclopedia
@@ -371,13 +479,13 @@ export const DemonSlayerApp: React.FC = () => {
               </section>
             )}
 
-            {/* VIEW 4: TWELVE KIZUKI & DEMONS RANKINGS */}
+            {/* VIEW 5: TWELVE KIZUKI & DEMONS */}
             {currentView === 'demons' && (
               <section className="space-y-10 animate-fadeIn">
                 <div className="text-center space-y-3">
                   <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-mono font-bold tracking-widest uppercase">
                     <Flame className="w-3.5 h-3.5 text-red-400" />
-                    <span>THE TWELVE DEMON MOONS & THE PROGENITOR</span>
+                    <span>THE PROGENITOR & TWELVE DEMON MOONS</span>
                   </div>
                   <h2 className="font-cinzel text-3xl sm:text-5xl font-black text-white">
                     The Twelve Kizuki (十二鬼月)
@@ -409,7 +517,7 @@ export const DemonSlayerApp: React.FC = () => {
                             {demon.name}
                           </h3>
                           <div className="text-xs font-mono text-amber-400">
-                            <strong>Threat:</strong> {demon.bountyRating}
+                            <strong>Threat Level:</strong> {demon.threatRating}
                           </div>
                         </div>
                       </div>
@@ -422,77 +530,6 @@ export const DemonSlayerApp: React.FC = () => {
                           <strong className="text-slate-400">Human Past:</strong> {demon.humanPast}
                         </div>
                         <p className="pt-2 text-slate-400 italic">"{demon.description}"</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {/* VIEW 5: MOTIVATIONAL QUOTES SANCTUARY */}
-            {currentView === 'quotes' && (
-              <section className="space-y-10 animate-fadeIn">
-                <div className="text-center space-y-3">
-                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-mono font-bold tracking-widest uppercase">
-                    <Quote className="w-3.5 h-3.5 text-red-400" />
-                    <span>WORDS CARVED IN THE HEART OF BATTLE</span>
-                  </div>
-                  <h2 className="font-cinzel text-3xl sm:text-5xl font-black text-white">
-                    Demon Slayer Quotes Sanctuary
-                  </h2>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {DEMON_SLAYER_QUOTES.map((q) => (
-                    <div
-                      key={q.id}
-                      className="p-6 rounded-3xl bg-slate-950/80 border border-red-500/25 p-6 flex flex-col justify-between space-y-4 shadow-xl"
-                    >
-                      <div className="space-y-4">
-                        <div className="flex items-center gap-3">
-                          <img
-                            src={q.image}
-                            alt={q.speaker}
-                            className="w-14 h-14 rounded-2xl object-contain bg-black border border-red-500/40"
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).src = './images/demon-slayer/tanjiro.png';
-                            }}
-                          />
-                          <div>
-                            <h4 className="font-cinzel text-lg font-bold text-white">{q.speaker}</h4>
-                            <div className="text-xs font-mono text-red-400">{q.title}</div>
-                          </div>
-                        </div>
-
-                        <blockquote className="p-4 rounded-2xl bg-black/60 border-l-4 border-red-500 text-red-100 italic text-sm leading-relaxed">
-                          "{q.quote}"
-                        </blockquote>
-
-                        <div className="text-xs text-slate-400">
-                          <strong className="text-amber-400">Context:</strong> {q.context}
-                        </div>
-                      </div>
-
-                      <div className="pt-3 border-t border-white/10 flex items-center justify-between">
-                        <span className="text-[10px] font-mono text-red-400 uppercase font-bold">
-                          {q.tagline}
-                        </span>
-                        <button
-                          onClick={() => handleCopyQuote(q.id, q.quote)}
-                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900 border border-red-500/30 text-xs font-mono text-red-300 hover:text-white hover:border-red-400 transition cursor-pointer"
-                        >
-                          {copiedQuoteId === q.id ? (
-                            <>
-                              <Check className="w-3.5 h-3.5 text-emerald-400" />
-                              <span className="text-emerald-400">COPIED!</span>
-                            </>
-                          ) : (
-                            <>
-                              <Copy className="w-3.5 h-3.5" />
-                              <span>COPY QUOTE</span>
-                            </>
-                          )}
-                        </button>
                       </div>
                     </div>
                   ))}
@@ -556,7 +593,78 @@ export const DemonSlayerApp: React.FC = () => {
               </section>
             )}
 
-            {/* VIEW 7: SACRED OATH */}
+            {/* VIEW 7: QUOTES SANCTUARY */}
+            {currentView === 'quotes' && (
+              <section className="space-y-10 animate-fadeIn">
+                <div className="text-center space-y-3">
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-mono font-bold tracking-widest uppercase">
+                    <Quote className="w-3.5 h-3.5 text-red-400" />
+                    <span>WORDS ENGRAVED IN HUMAN WILL</span>
+                  </div>
+                  <h2 className="font-cinzel text-3xl sm:text-5xl font-black text-white">
+                    Demon Slayer Quotes Sanctuary
+                  </h2>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {DEMON_SLAYER_QUOTES.map((q) => (
+                    <div
+                      key={q.id}
+                      className="p-6 rounded-3xl bg-slate-950/80 border border-red-500/25 flex flex-col justify-between space-y-4 shadow-xl"
+                    >
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={q.image}
+                            alt={q.speaker}
+                            className="w-14 h-14 rounded-2xl object-contain bg-black border border-red-500/40"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = './images/demon-slayer/tanjiro.png';
+                            }}
+                          />
+                          <div>
+                            <h4 className="font-cinzel text-lg font-bold text-white">{q.speaker}</h4>
+                            <div className="text-xs font-mono text-red-400">{q.title}</div>
+                          </div>
+                        </div>
+
+                        <blockquote className="p-4 rounded-2xl bg-black/60 border-l-4 border-red-500 text-red-100 italic text-sm leading-relaxed">
+                          "{q.quote}"
+                        </blockquote>
+
+                        <div className="text-xs text-slate-400">
+                          <strong className="text-amber-400">Context:</strong> {q.context}
+                        </div>
+                      </div>
+
+                      <div className="pt-3 border-t border-white/10 flex items-center justify-between">
+                        <span className="text-[10px] font-mono text-red-400 uppercase font-bold">
+                          {q.tagline}
+                        </span>
+                        <button
+                          onClick={() => handleCopyQuote(q.id, q.quote)}
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900 border border-red-500/30 text-xs font-mono text-red-300 hover:text-white hover:border-red-400 transition cursor-pointer"
+                        >
+                          {copiedQuoteId === q.id ? (
+                            <>
+                              <Check className="w-3.5 h-3.5 text-emerald-400" />
+                              <span className="text-emerald-400">COPIED!</span>
+                            </>
+                          ) : (
+                            <>
+                              <Copy className="w-3.5 h-3.5" />
+                              <span>COPY QUOTE</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* VIEW 8: SACRED OATH */}
             {currentView === 'oath' && (
               <section className="max-w-4xl mx-auto text-center space-y-8 animate-fadeIn py-12">
                 <div className="w-20 h-20 rounded-3xl bg-red-600/20 border-2 border-red-500/60 mx-auto flex items-center justify-center shadow-[0_0_50px_rgba(239,68,68,0.5)]">
@@ -589,7 +697,7 @@ export const DemonSlayerApp: React.FC = () => {
           </main>
 
           {/* FAMILY & MENTORS TREE MODAL */}
-          {showFamilyModal && selectedHashira && (
+          {showFamilyModal && selectedCharacter && (
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/95 backdrop-blur-2xl animate-fadeIn">
               <div className="relative w-full max-w-4xl bg-slate-950 border-2 border-red-500/50 rounded-3xl p-6 sm:p-8 shadow-[0_0_60px_rgba(239,68,68,0.3)] max-h-[90vh] overflow-y-auto">
                 <div className="flex items-start justify-between pb-4 border-b border-red-500/30">
@@ -599,7 +707,7 @@ export const DemonSlayerApp: React.FC = () => {
                       <span>SACRED ANCESTRAL & MENTORSHIP LINEAGE</span>
                     </div>
                     <h3 className="font-cinzel text-2xl sm:text-4xl font-black text-white">
-                      {selectedHashira.name}’s Legendary Family Tree
+                      {selectedCharacter.name}’s Legendary Family Tree
                     </h3>
                   </div>
                   <button
@@ -611,7 +719,7 @@ export const DemonSlayerApp: React.FC = () => {
                 </div>
 
                 <div className="mt-6 space-y-6">
-                  {selectedHashira.familyTree.map((member, idx) => (
+                  {selectedCharacter.familyTree.map((member, idx) => (
                     <div
                       key={idx}
                       className="p-5 rounded-2xl bg-slate-900/90 border border-red-500/20 hover:border-red-400/60 transition-all flex flex-col md:flex-row gap-5 items-start"
@@ -683,7 +791,7 @@ export const DemonSlayerApp: React.FC = () => {
                 <div className="flex items-start justify-between pb-4 border-b border-red-500/30">
                   <div>
                     <div className="text-xs font-mono text-red-400 tracking-widest uppercase mb-1">
-                      {selectedArc.japaneseTitle} • {selectedArc.episodes}
+                      {selectedArc.part} • {selectedArc.chapters}
                     </div>
                     <h3 className="font-cinzel text-2xl sm:text-4xl font-black text-white">
                       {selectedArc.title}
@@ -701,7 +809,6 @@ export const DemonSlayerApp: React.FC = () => {
                   <strong className="text-red-400">Synopsis:</strong> {selectedArc.synopsis}
                 </div>
 
-                {/* 20 Plot Scenes Grid */}
                 <div className="space-y-4">
                   <h4 className="font-cinzel text-xl font-bold text-white flex items-center gap-2">
                     <Scroll className="w-5 h-5 text-red-500" />

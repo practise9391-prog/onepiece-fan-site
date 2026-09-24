@@ -30,6 +30,7 @@ export interface ShadowSoldier {
   koreanName: string;
   grade: 'Grand Marshal' | 'General' | 'Marshal' | 'Elite Knight' | 'Knight';
   origin: string;
+  howObtained: string;
   ability: string;
   quote: string;
   description: string;
@@ -52,6 +53,7 @@ export interface StoryPlotScene {
 
 export interface SoloLevelingArc {
   id: string;
+  season: 'Season 1: The Foundations' | 'Season 2: Arise from the Shadow' | 'Season 3: The Monarchs & Cosmic War';
   title: string;
   koreanTitle: string;
   subtitle: string;
@@ -70,6 +72,16 @@ export interface SystemSkill {
   manaCost: string;
   description: string;
   effect: string;
+}
+
+export interface MonarchLore {
+  id: string;
+  name: string;
+  title: string;
+  domain: string;
+  vessel: string;
+  description: string;
+  image: string;
 }
 
 export interface SoloLevelingQuote {
@@ -95,6 +107,7 @@ export interface MonarchWeapon {
   image: string;
 }
 
+// 👑 TOP HUNTERS & MONARCH INHERITORS
 export const TOP_HUNTERS: HunterDossier[] = [
   {
     id: 'jinwoo',
@@ -142,6 +155,31 @@ export const TOP_HUNTERS: HunterDossier[] = [
     ]
   },
   {
+    id: 'thomas-andre',
+    name: 'Thomas Andre',
+    title: 'Goliath / National Level Hunter',
+    koreanName: '토마스 안드레',
+    rank: 'National Level (Special S-Rank)',
+    guild: 'Scavenger Guild (Master)',
+    classType: 'Tanker / Ruler’s Vessel',
+    signatureAbility: 'Capture, Reinforcement, Demolition',
+    description: 'America’s strongest National Level Hunter and vessel of the Rulers. Surviving the Kamish dragon raid, he possesses diamond-hard skin and shockwaves that level cities. After Jin-Woo spared him, he gifted him Kamish’s Wrath.',
+    image: './images/solo-leveling/jinwoo.png',
+    accentColor: '#f59e0b',
+    familyTree: [
+      {
+        name: 'Kamish the Dragon',
+        relation: 'Great Calamity / Source of Weapons',
+        epithet: 'Humanity’s Greatest Nightmare',
+        image: './images/solo-leveling/dungeon-gate.png',
+        achievements: 'Wiped out hundreds of elite hunters; required all five National Level Hunters to defeat.',
+        bestShotQuote: 'My fangs shall pierce even the gods.',
+        bestShotScene: 'His remains gifted to Jin-Woo as the twin daggers Kamish’s Wrath.',
+        legacy: 'Provided the strongest weapon in the human world.'
+      }
+    ]
+  },
+  {
     id: 'cha-haein',
     name: 'Cha Hae-In',
     title: 'The Sword Dance Huntress',
@@ -152,7 +190,7 @@ export const TOP_HUNTERS: HunterDossier[] = [
     signatureAbility: 'Sword of Light, Mana Scent Sensitivity',
     description: 'South Korea’s only female S-Rank hunter and vice-master of the prestigious Hunters Guild. Hypersensitive to the foul odor of mana, Jin-Woo is the only hunter whose scent smells comforting to her.',
     image: './images/solo-leveling/cha-haein.png',
-    accentColor: '#f59e0b',
+    accentColor: '#ec4899',
     familyTree: [
       {
         name: 'Song Chi-Yul',
@@ -168,6 +206,7 @@ export const TOP_HUNTERS: HunterDossier[] = [
   }
 ];
 
+// ⚔️ SHADOW ARMY (HOW JIN-WOO EXTRACTED THEM)
 export const SHADOW_ARMY: ShadowSoldier[] = [
   {
     id: 'bellion',
@@ -175,6 +214,7 @@ export const SHADOW_ARMY: ShadowSoldier[] = [
     koreanName: '베르리온',
     grade: 'Grand Marshal',
     origin: 'Born from the World Tree / Original Servant of Ashborn',
+    howObtained: 'Inherited directly from Ashborn when the former Shadow Monarch surrendered his full authority and the Black Heart to Jin-Woo.',
     ability: 'Centipede Segmented Giant Blade & Planetary Shockwaves',
     quote: 'I have waited millennia for the true Shadow Monarch to awaken.',
     description: 'The supreme commander of the entire Shadow Army. Possesses two pairs of massive wings and wields a colossal segmented whip-sword. In a friendly duel, he withstood Beru’s full power without moving an inch.',
@@ -187,7 +227,8 @@ export const SHADOW_ARMY: ShadowSoldier[] = [
     koreanName: '베르',
     grade: 'General',
     origin: 'Jeju Island S-Rank Dungeon Ant Queen’s Offspring',
-    ability: 'Gluttony (Stat & Skill Absorption), Healing Magic, Flight',
+    howObtained: 'Extracted from the decapitated corpse of the mutant Ant King on Jeju Island after Jin-Woo pummeled the beast with bare fists.',
+    ability: 'Gluttony (Stat & Skill Absorption), Healing Magic, Supersonic Flight',
     quote: 'My Liege! All who dare stand in your path shall be slaughtered!',
     description: 'Extracted from the devastating Ant King who single-handedly slaughtered multiple Japanese S-Rank hunters. Fanatically loyal to Jin-Woo, weeping with emotion whenever his King praises him.',
     image: './images/solo-leveling/beru.png',
@@ -199,16 +240,30 @@ export const SHADOW_ARMY: ShadowSoldier[] = [
     koreanName: '핏빛의 이그리트',
     grade: 'Marshal',
     origin: 'Boss of the Job Change Quest (Throne Room of the Castle)',
+    howObtained: 'Extracted after an excruciating hand-to-hand brawl in the Job Change Castle on Jin-Woo’s third and final extraction attempt: "ARISE".',
     ability: 'Telekinetic Greatsword Mastery & Lightning Aura',
     quote: 'A knight kneels only to his sovereign king.',
     description: 'The first major knight extracted by Sung Jin-Woo. Possesses immaculate chivalric honor, bowing solemnly after each battle. Wields twin swords imbued with lightning and telekinesis.',
     image: './images/solo-leveling/igris.png',
     glowColor: 'rgba(239, 68, 68, 0.8)'
+  },
+  {
+    id: 'iron',
+    name: 'Iron (Kim Chul)',
+    koreanName: '아이언',
+    grade: 'Elite Knight',
+    origin: 'A-Rank Hunter Kim Chul in the Red Gate Dungeon',
+    howObtained: 'Extracted from Kim Chul after Igris cleaved him from behind to stop him from assassinating Jin-Woo during the snowy Red Gate trial.',
+    ability: 'Taunt Roar, Superhuman Defense, Giant Warhammer Pulverization',
+    quote: '*Pounds chest with massive warhammer and roars at the sky*',
+    description: 'A towering armored giant who draws all enemy aggro with deafening battle roars and pulverizes frontlines with giant shields.',
+    image: './images/solo-leveling/jinwoo.png',
+    glowColor: 'rgba(16, 185, 129, 0.8)'
   }
 ];
 
-// Helper to generate 20 story scenes for Solo Leveling Arcs
-const generate20SoloLevelingScenes = (arcName: string, prefix: string, baseImg: string): StoryPlotScene[] => {
+// Helper to generate 20 story scenes per arc
+const generate20Scenes = (arcName: string, prefix: string, baseImg: string): StoryPlotScene[] => {
   const sceneTemplates = [
     { title: 'Dungeon Gate Opens', tag: 'Blue Gate Descent', lesson: 'Even in the deepest abyss, survival begins with a refusal to submit.' },
     { title: 'The Double Dungeon Rules', tag: 'Cartenon Temple', lesson: 'Praise the God, Bow to the God, Prove your Faith: heed the warning signs.' },
@@ -246,45 +301,66 @@ const generate20SoloLevelingScenes = (arcName: string, prefix: string, baseImg: 
   }));
 };
 
+// 🌌 ALL STORY SAGAS & ARCS IN CHRONOLOGICAL ORDER
 export const SOLO_LEVELING_ARCS: SoloLevelingArc[] = [
+  // SEASON 1: THE FOUNDATIONS
   {
-    id: 'cartenon',
-    title: 'D-Rank Double Dungeon Arc',
+    id: 'double-dungeon',
+    season: 'Season 1: The Foundations',
+    title: 'D-Rank Dungeon Arc (Double Dungeon)',
     koreanTitle: '이중 던전 편',
-    subtitle: 'The Courage of the Weak & Reawakening',
+    subtitle: 'The Ultimate Catalyst & Courage of the Weak',
     chapters: 'Chapters 1–10',
     antagonists: ['God Statue of Cartenon Temple', 'Stone Sentinels'],
-    synopsis: 'E-Rank hunter Sung Jin-Woo and his strike squad enter a dual-layer D-rank gate, only to discover a terrifying ancient temple of colossal stone gods that incinerates hunters in seconds.',
+    synopsis: 'The ultimate catalyst. E-Rank hunter Sung Jin-Woo undergoes his terrifying near-death experience, gets chosen by the "System", and gains the unique ability to level up.',
     keyClash: 'Sung Jin-Woo vs The Commandments of Cartenon',
     image: './images/solo-leveling/statue-god.png',
-    storyPlotScenes: generate20SoloLevelingScenes('D-Rank Double Dungeon Arc', 'car', './images/solo-leveling/statue-god.png')
+    storyPlotScenes: generate20Scenes('D-Rank Dungeon Arc', 'dd', './images/solo-leveling/statue-god.png')
+  },
+  {
+    id: 'subway-instance',
+    season: 'Season 1: The Foundations',
+    title: 'Instance Dungeons & Daily Quest Arc',
+    koreanTitle: '일일 퀘스트 & 인스턴스 던전 편',
+    subtitle: '100 Pushups & Subway Station Kasaka',
+    chapters: 'Chapters 11–37',
+    antagonists: ['Blue Poison-Fang Kasaka', 'D-Rank Giant Spiders'],
+    synopsis: 'Surviving the brutal 100 pushups daily quest, Jin-Woo enters the subway instance dungeon. Testing his awakening against blue snakes and giant spiders, he forges Kasaka’s venom dagger.',
+    keyClash: 'Sung Jin-Woo vs Blue Poison-Fang Kasaka',
+    image: './images/solo-leveling/dungeon-gate.png',
+    storyPlotScenes: generate20Scenes('Instance Dungeons Arc', 'id', './images/solo-leveling/dungeon-gate.png')
   },
   {
     id: 'job-change',
-    title: 'Job Change Quest Arc',
+    season: 'Season 1: The Foundations',
+    title: 'Job Change Arc (The Igris Fight)',
     koreanTitle: '전직 퀘스트 편',
-    subtitle: 'The Blood-Red Knight & Command: ARISE',
+    subtitle: 'The Blood-Red Knight & First Shadow Army',
     chapters: 'Chapters 38–45',
     antagonists: ['Blood-Red Commander Igris', 'Infinite Marionette Knights'],
-    synopsis: 'Jin-Woo enters the deepest castle dungeon to acquire a specialization class. After a vicious hand-to-hand brawl with Igris, he unlocks the hidden Necromancer class and the command "ARISE".',
+    synopsis: 'The turning point for his combat class. Jin-Woo fights the legendary blood-red commander knight Igris and officially unlocks his Necromancer powers, creating his signature army of shadow soldiers with the command "ARISE".',
     keyClash: 'Sung Jin-Woo vs Igris the Bloodred',
     image: './images/solo-leveling/igris.png',
-    storyPlotScenes: generate20SoloLevelingScenes('Job Change Quest Arc', 'jc', './images/solo-leveling/igris.png')
+    storyPlotScenes: generate20Scenes('Job Change Arc', 'jc', './images/solo-leveling/igris.png')
   },
+
+  // SEASON 2: ARISE FROM THE SHADOW
   {
     id: 'red-gate',
+    season: 'Season 2: Arise from the Shadow',
     title: 'Red Gate Arc',
     koreanTitle: '레드게이트 편',
-    subtitle: 'Blizzard of the Frost Elves',
+    subtitle: 'Blizzard of the Frost Elves & Baruka',
     chapters: 'Chapters 46–55',
-    antagonists: ['Baruka (Frost Elf Leader)', 'Ice Bears'],
-    synopsis: 'A routine White Tiger training raid turns into an S-Rank Red Gate trap. Jin-Woo takes charge, protecting hunter novices and slaying the chieftain Baruka with his growing shadow legion.',
+    antagonists: ['Baruka (Frost Elf Chieftain)', 'Ice Bears'],
+    synopsis: 'The first time Jin-Woo goes all-out in front of other human witnesses. Trapped in an icy, isolated A-Rank dungeon, he completely dismantles a horde of Ice Elves and asserts his dominance.',
     keyClash: 'Sung Jin-Woo vs Baruka',
     image: './images/solo-leveling/dungeon-gate.png',
-    storyPlotScenes: generate20SoloLevelingScenes('Red Gate Arc', 'rg', './images/solo-leveling/dungeon-gate.png')
+    storyPlotScenes: generate20Scenes('Red Gate Arc', 'rg', './images/solo-leveling/dungeon-gate.png')
   },
   {
     id: 'demon-castle',
+    season: 'Season 2: Arise from the Shadow',
     title: 'Demon Castle Arc',
     koreanTitle: '악마성 편',
     subtitle: '100 Floors of Fire & Holy Water of Life',
@@ -293,31 +369,61 @@ export const SOLO_LEVELING_ARCS: SoloLevelingArc[] = [
     synopsis: 'To brew the Holy Water of Life and cure his mother’s eternal sleep disease, Jin-Woo conquers all 100 floors of the Demon Castle, taming the dragon Kaisel and executing Demon King Baran.',
     keyClash: 'Sung Jin-Woo & Igris vs Demon King Baran',
     image: './images/solo-leveling/jinwoo.png',
-    storyPlotScenes: generate20SoloLevelingScenes('Demon Castle Arc', 'dc', './images/solo-leveling/jinwoo.png')
+    storyPlotScenes: generate20Scenes('Demon Castle Arc', 'dc', './images/solo-leveling/jinwoo.png')
   },
   {
     id: 'jeju-island',
-    title: 'Jeju Island S-Rank Raid Arc',
+    season: 'Season 2: Arise from the Shadow',
+    title: 'Jeju Island Arc (The Ant Raid)',
     koreanTitle: '제주도 레이드 편',
     subtitle: 'Fall of the Ant King & Birth of Beru',
     chapters: 'Chapters 90–105',
     antagonists: ['The Ant King (Beru)', 'Ant Queen'],
-    synopsis: 'The joint Korea-Japan S-Rank expedition faces total annihilation when a winged mutant Ant King decapitates top hunters effortlessly. Jin-Woo shadow-exchanges to Jeju and executes the beast.',
+    synopsis: 'The absolute peak of the first two seasons. Giant mutated ants slaughter humanity\'s strongest S-Rank hunters on a desolate island. Jin-Woo arrives to turn the tide in the anime\'s biggest, most brutal battle yet, cementing his place as an apex global hunter.',
     keyClash: 'Sung Jin-Woo vs Ant King (Total Annihilation)',
     image: './images/solo-leveling/beru.png',
-    storyPlotScenes: generate20SoloLevelingScenes('Jeju Island Raid Arc', 'ji', './images/solo-leveling/beru.png')
+    storyPlotScenes: generate20Scenes('Jeju Island Arc', 'ji', './images/solo-leveling/beru.png')
   },
+
+  // SEASON 3: THE MONARCHS & COSMIC WAR
   {
     id: 'monarchs-war',
-    title: 'Monarchs War & Final Climax',
+    season: 'Season 3: The Monarchs & Cosmic War',
+    title: 'Monarchs War & Ahjin Guild Arc',
     koreanTitle: '군주들의 전쟁 편',
-    subtitle: 'Destruction Monarch Antares vs Shadow Monarch',
-    chapters: 'Chapters 160–179',
-    antagonists: ['Antares (Monarch of Destruction)', 'Rakan (Beast Monarch)', 'Sillad (Frost Monarch)'],
-    synopsis: 'The primordial Monarchs invade Earth. Inheriting Ashborn’s complete divinity and the million-strong shadow host, Jin-Woo wages the ultimate war for humanity’s survival.',
-    keyClash: 'Sung Jin-Woo vs Antares (Breath of Destruction vs Shadow Domain)',
+    subtitle: 'Invasion of the Primordial Monarchs',
+    chapters: 'Chapters 160–175',
+    antagonists: ['Rakan (Beast Monarch)', 'Sillad (Frost Monarch)', 'Antares (Destruction Monarch)'],
+    synopsis: 'The primordial Monarchs invade Earth. Ashborn passes the infinite Black Heart of the Monarch to Jin-Woo, unlocking true omnipotent control over life and death.',
+    keyClash: 'Sung Jin-Woo vs Beast & Frost Monarchs',
     image: './images/solo-leveling/jinwoo.png',
-    storyPlotScenes: generate20SoloLevelingScenes('Monarchs War Arc', 'mw', './images/solo-leveling/jinwoo.png')
+    storyPlotScenes: generate20Scenes('Monarchs War Arc', 'mw', './images/solo-leveling/jinwoo.png')
+  },
+  {
+    id: 'final-battle',
+    season: 'Season 3: The Monarchs & Cosmic War',
+    title: 'Final Battle & Cup of Reincarnation Arc',
+    koreanTitle: '최종 결전 & 윤회의 잔 편',
+    subtitle: 'Rewriting History & Peaceful Modern World',
+    chapters: 'Chapters 176–179 + Epilogue',
+    antagonists: ['Antares (King of Dragons)'],
+    synopsis: 'Jin-Woo clashes with Destruction Monarch Antares on the shores of Japan. Utilizing the Cup of Reincarnation, Jin-Woo enters the dimensional rift alone for 27 years to slay all Monarchs before returning to a peaceful modern world.',
+    keyClash: 'Sung Jin-Woo vs Antares (Breath of Destruction vs Shadow Realm)',
+    image: './images/solo-leveling/jinwoo.png',
+    storyPlotScenes: generate20Scenes('Final Battle Arc', 'fb', './images/solo-leveling/jinwoo.png')
+  },
+  {
+    id: 'ragnarok',
+    season: 'Season 3: The Monarchs & Cosmic War',
+    title: 'Solo Leveling: Ragnarok (Next Generation)',
+    koreanTitle: '나 혼자만 레벨업: 라그나로크',
+    subtitle: 'Sung Su-Ho Awakens as the Shadow Prince',
+    chapters: 'Sequel Novel & Webtoon',
+    antagonists: ['Outer Gods / Itarim Invaders'],
+    synopsis: 'While Jin-Woo battles celestial Outer Gods at the edge of the universe, his son Sung Su-Ho awakens his dormant Shadow Monarch bloodline to defend Earth from new cosmic rifts.',
+    keyClash: 'Sung Su-Ho vs Itarim Apostle',
+    image: './images/solo-leveling/igris.png',
+    storyPlotScenes: generate20Scenes('Ragnarok Arc', 'rn', './images/solo-leveling/igris.png')
   }
 ];
 
@@ -353,6 +459,36 @@ export const SYSTEM_SKILLS: SystemSkill[] = [
     manaCost: 'Continuous Drain',
     description: 'Casts a pitch-black shadow over a massive radius, enhancing all shadow soldiers within by 50% combat stats.',
     effect: 'Turns the entire battlefield into the sovereign realm of death.'
+  }
+];
+
+export const MONARCHS_LORE: MonarchLore[] = [
+  {
+    id: 'ashborn',
+    name: 'Ashborn',
+    title: 'The Monarch of Shadows (그림자 군주)',
+    domain: 'Death, Shadows, Rebirth',
+    vessel: 'Sung Jin-Woo',
+    description: 'Originally the Greatest Fragment of Brilliant Light. After being betrayed by other Rulers, he discovered the power of death and became the Shadow Monarch.',
+    image: './images/solo-leveling/igris.png'
+  },
+  {
+    id: 'antares',
+    name: 'Antares',
+    title: 'The Monarch of Destruction (파멸의 군주)',
+    domain: 'Fire, Dragons, Annihilation',
+    vessel: 'None (Manifested True Dragon Form)',
+    description: 'The King of Berserk Dragons and the strongest of all Monarchs. Possesses the Breath of Destruction that erases matter from existence.',
+    image: './images/solo-leveling/jinwoo.png'
+  },
+  {
+    id: 'rakan',
+    name: 'Rakan',
+    title: 'The Beast Monarch (백수의 군주)',
+    domain: 'Beasts, Fangs, Bloodlust',
+    vessel: 'None',
+    description: 'The King of Beasts. Relentless, feral, and coward when facing overwhelming power, he betrayed Jin-Woo before being hunted down.',
+    image: './images/solo-leveling/dungeon-gate.png'
   }
 ];
 
