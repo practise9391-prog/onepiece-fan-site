@@ -461,3 +461,4 @@ export const NarutoApp: React.FC = () => {
     </div>
   );
 };
+

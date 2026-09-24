@@ -476,3 +476,4 @@ export const SoloLevelingApp: React.FC = () => {
     </div>
   );
 };
+

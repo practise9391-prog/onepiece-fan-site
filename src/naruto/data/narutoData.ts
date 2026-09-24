@@ -232,3 +232,4 @@ export const NARUTO_ARCS: NarutoArc[] = [
     image: './images/naruto/sasuke-rinnegan.png'
   }
 ];
+

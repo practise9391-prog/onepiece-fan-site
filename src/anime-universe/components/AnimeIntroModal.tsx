@@ -104,3 +104,4 @@ export const AnimeIntroModal: React.FC<AnimeIntroModalProps> = ({ anime, onCompl
     </div>
   );
 };
+

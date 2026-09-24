@@ -229,3 +229,4 @@ export const DEMON_SLAYER_ARCS: DemonSlayerArc[] = [
     image: './images/demon-slayer/infinity-castle.png'
   }
 ];
+

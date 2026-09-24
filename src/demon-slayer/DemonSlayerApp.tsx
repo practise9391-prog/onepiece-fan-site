@@ -474,3 +474,4 @@ export const DemonSlayerApp: React.FC = () => {
     </div>
   );
 };
+

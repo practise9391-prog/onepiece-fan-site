@@ -103,3 +103,4 @@ export const ANIME_UNIVERSES: AnimeUniverseMeta[] = [
     features: ['Sage Mode & Nine-Tails Chakra', 'The 7 Leaf Hokage Monuments', 'The Akatsuki Clan & Rings', 'Jutsu & Dojutsu (Sharingan, Rinnegan)', 'Fourth Great Ninja War']
   }
 ];
+

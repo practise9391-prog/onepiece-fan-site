@@ -120,3 +120,4 @@ export const UniverseParticleCanvas: React.FC = () => {
     />
   );
 };
+

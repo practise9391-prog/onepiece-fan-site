@@ -157,3 +157,4 @@ export const GATES_AND_DUNGEONS: GateDungeon[] = [
     image: './images/solo-leveling/dungeon-gate.png'
   }
 ];
+

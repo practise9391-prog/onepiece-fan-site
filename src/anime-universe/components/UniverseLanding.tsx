@@ -194,3 +194,4 @@ export const UniverseLanding: React.FC<UniverseLandingProps> = ({ onSelectAnime 
     </div>
   );
 };
+
