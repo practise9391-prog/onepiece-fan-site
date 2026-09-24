@@ -241,3 +241,4 @@ export const NarutoHero: React.FC<NarutoHeroProps> = ({ onNavigate }) => {
     </section>
   );
 };
+

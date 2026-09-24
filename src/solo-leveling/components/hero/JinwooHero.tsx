@@ -239,3 +239,4 @@ export const JinwooHero: React.FC<JinwooHeroProps> = ({ onNavigate }) => {
     </section>
   );
 };
+

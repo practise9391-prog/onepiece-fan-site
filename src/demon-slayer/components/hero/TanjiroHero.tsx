@@ -245,3 +245,4 @@ export const TanjiroHero: React.FC<TanjiroHeroProps> = ({ onNavigate }) => {
     </section>
   );
 };
+
