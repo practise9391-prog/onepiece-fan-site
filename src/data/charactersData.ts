@@ -58,7 +58,7 @@ export const STRAW_HATS: CharacterProfile[] = [
     accentBg: 'from-amber-500/20 via-yellow-500/10 to-transparent',
     cinematicMomentTitle: 'The Drums of Liberation',
     cinematicMomentText: 'His heartbeat pulses to the timeless rhythm: doom-dut-da-da. The sun rises over Wano as lightning becomes his plaything and laughter echoes across the sea.',
-    avatarUrl: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=600&q=80'
+    avatarUrl: './images/crew/luffy.png'
   },
   {
     id: 'zoro',
@@ -79,7 +79,7 @@ export const STRAW_HATS: CharacterProfile[] = [
     accentBg: 'from-emerald-600/20 via-teal-700/10 to-transparent',
     cinematicMomentTitle: 'Nothing Happened',
     cinematicMomentText: 'Standing in a pool of his own blood amidst the ruins of Thriller Bark, Zoro took upon himself every shred of Luffy’s accumulated agony from Bartholomew Kuma, never speaking a word of complaint.',
-    avatarUrl: 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=600&q=80'
+    avatarUrl: './images/crew/zoro.png'
   },
   {
     id: 'sanji',
@@ -100,7 +100,7 @@ export const STRAW_HATS: CharacterProfile[] = [
     accentBg: 'from-blue-600/20 via-indigo-600/10 to-transparent',
     cinematicMomentTitle: 'The Blue Flame of Passion',
     cinematicMomentText: 'Embracing his human compassion over Germa’s mechanical cruelty, his lightning-fast kicks transform from crimson flames into celestial blue incinerating heat.',
-    avatarUrl: 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?auto=format&fit=crop&w=600&q=80'
+    avatarUrl: './images/crew/sanji.png'
   },
   {
     id: 'jinbe',
@@ -121,7 +121,7 @@ export const STRAW_HATS: CharacterProfile[] = [
     accentBg: 'from-sky-700/20 via-blue-900/10 to-transparent',
     cinematicMomentTitle: 'A Mere Emperor of the Sea',
     cinematicMomentText: 'Refusing to yield a single second of his lifespan to Big Mom’s Soul Pocus, Jinbe stood unblinking: "If Luffy is to be King, why should I fear anyone?"',
-    avatarUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=600&q=80'
+    avatarUrl: './images/crew/jinbe.png'
   },
   {
     id: 'brook',
@@ -147,7 +147,7 @@ export const STRAW_HATS: CharacterProfile[] = [
     accentBg: 'from-purple-700/20 via-fuchsia-900/10 to-transparent',
     cinematicMomentTitle: 'Binks’ Sake on the Moonlit Sea',
     cinematicMomentText: 'In Whole Cake Island, Brook defied Emperor Big Mom face to face, sleeping beside her and stealing rubbings of the Road Poneglyphs tucked inside his cranial cavity.',
-    avatarUrl: 'https://images.unsplash.com/photo-1509114397022-ed747cca3f65?auto=format&fit=crop&w=600&q=80'
+    avatarUrl: './images/crew/brook.png'
   },
   {
     id: 'chopper',
@@ -173,7 +173,7 @@ export const STRAW_HATS: CharacterProfile[] = [
     accentBg: 'from-pink-600/20 via-rose-700/10 to-transparent',
     cinematicMomentTitle: 'The Miracle of Drum Island',
     cinematicMomentText: 'Standing atop the snowy drum rock as pink dust blossomed into the sky, Chopper swore to cure any ailment across the four seas.',
-    avatarUrl: 'https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?auto=format&fit=crop&w=600&q=80'
+    avatarUrl: './images/crew/chopper.png'
   },
   {
     id: 'robin',
@@ -199,7 +199,7 @@ export const STRAW_HATS: CharacterProfile[] = [
     accentBg: 'from-indigo-700/20 via-purple-900/10 to-transparent',
     cinematicMomentTitle: 'I Want To Live!',
     cinematicMomentText: 'Tears streaming down her face across the Tower of Law, she finally allowed herself to reach out and scream the words she kept buried inside for twenty years.',
-    avatarUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80'
+    avatarUrl: './images/crew/robin.png'
   },
   {
     id: 'nami',
@@ -220,7 +220,7 @@ export const STRAW_HATS: CharacterProfile[] = [
     accentBg: 'from-orange-600/20 via-amber-700/10 to-transparent',
     cinematicMomentTitle: 'Luffy Will Be Pirate King',
     cinematicMomentText: 'Even facing death with Ulti smashing her skull in Onigashima, Nami refused to lie, proudly shouting that Luffy would become the Pirate King.',
-    avatarUrl: 'https://images.unsplash.com/photo-1534088568595-a066f410bcda?auto=format&fit=crop&w=600&q=80'
+    avatarUrl: './images/crew/nami.png'
   },
   {
     id: 'franky',
@@ -241,7 +241,7 @@ export const STRAW_HATS: CharacterProfile[] = [
     accentBg: 'from-cyan-600/20 via-sky-700/10 to-transparent',
     cinematicMomentTitle: 'The Iron Pirate’s Soul',
     cinematicMomentText: 'Piloting the invincible Iron Pirate General Franky through the heart of battle, firing searing plasma Radical Beams with his signature "SUPERRR!" stance.',
-    avatarUrl: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80'
+    avatarUrl: './images/crew/franky.png'
   },
   {
     id: 'usopp',
@@ -262,7 +262,7 @@ export const STRAW_HATS: CharacterProfile[] = [
     accentBg: 'from-amber-600/20 via-yellow-700/10 to-transparent',
     cinematicMomentTitle: 'The Long-Distance Shot That Saved Luffy',
     cinematicMomentText: 'Locking onto Sugar through kilometers of castle walls in Dressrosa using newly awakened Observation Haki, sinking the impossible shot that saved Luffy and Law.',
-    avatarUrl: 'https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&w=600&q=80'
+    avatarUrl: './images/crew/usopp.png'
   }
 ];
 

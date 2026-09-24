@@ -132,15 +132,15 @@ export const CharacterSanctuary: React.FC<CharacterSanctuaryProps> = ({ onThemeC
           {/* Left Column: Avatar & Bounties & Quick Action */}
           <div className="lg:col-span-4 flex flex-col items-center text-center">
             <div
-              className="relative w-48 h-48 sm:w-60 sm:h-60 rounded-3xl overflow-hidden border-2 shadow-2xl transition-transform duration-500 hover:scale-105"
+              className="relative w-52 h-72 sm:w-64 sm:h-88 rounded-3xl overflow-hidden border-2 shadow-2xl transition-transform duration-500 hover:scale-105 bg-slate-900/80 flex items-center justify-center p-3"
               style={{ borderColor: selectedChar.themeColor }}
             >
               <img
                 src={selectedChar.avatarUrl}
                 alt={selectedChar.name}
-                className="w-full h-full object-cover filter brightness-95 contrast-105"
+                className="w-full h-full object-contain filter brightness-105 contrast-110 drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)]"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
               <div className="absolute bottom-3 inset-x-0 font-mono text-xs font-bold text-amber-300">
                 {selectedChar.bountyFormatted}
               </div>
