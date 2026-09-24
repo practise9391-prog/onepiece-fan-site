@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { WANTED_POSTERS, WantedPoster } from '../../data/bountiesData';
 import { sound } from '../../audio/soundEngine';
-import { Coins, Sparkles, Anchor, Eye, ShieldAlert, AlertTriangle } from 'lucide-react';
+import { Coins, Sparkles, Anchor, ShieldAlert, Crown, Flame } from 'lucide-react';
 
 export const BountyBoard: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState<string>('ALL');
   const [tickedBounties, setTickedBounties] = useState<{ [key: string]: number }>({});
   const [selectedPoster, setSelectedPoster] = useState<WantedPoster | null>(null);
 
-  const filters = ['ALL', 'Straw Hat Pirates', 'Four Emperors', 'Legendary Pirates'];
+  const filters = ['ALL', 'Straw Hat Pirates', 'Four Emperors', 'Legendary Pirates', 'Roger Pirates'];
 
   const filteredPosters = activeFilter === 'ALL'
     ? WANTED_POSTERS
     : WANTED_POSTERS.filter((p) => p.affiliation === activeFilter);
 
-  // Fast Animated Berry Counter Ticker (240ms)
+  // Animated Berry Counter Ticker
   useEffect(() => {
     filteredPosters.forEach((poster) => {
       let current = 0;
@@ -36,6 +36,8 @@ export const BountyBoard: React.FC = () => {
     if (poster.isGear5) {
       sound.startDrumsOfLiberation();
       setTimeout(() => sound.stopDrumsOfLiberation(), 2500);
+    } else if (poster.isPirateKing) {
+      sound.playThunder();
     }
     setSelectedPoster(poster);
   };
@@ -46,7 +48,7 @@ export const BountyBoard: React.FC = () => {
       <div className="text-center mb-12">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold tracking-widest uppercase mb-3">
           <Coins className="w-3.5 h-3.5" />
-          <span>MARINE HEADQUARTERS BOUNTY REGISTRY</span>
+          <span>WORLD GOVERNMENT ADMIRALTY BOUNTY ARCHIVE</span>
         </div>
 
         <h2 className="font-cinzelDeco text-3xl sm:text-5xl md:text-6xl font-black text-white tracking-wider">
@@ -54,7 +56,7 @@ export const BountyBoard: React.FC = () => {
         </h2>
 
         <p className="mt-3 text-slate-400 max-w-2xl mx-auto text-sm sm:text-base font-medium">
-          Official imperial wanted notices issued by the World Government Marine Directorate. Featuring authentic canonical portraits including Luffy’s Gear 5 White Form.
+          Official imperial wanted notices. Featuring all past & present Four Emperors, ancient Legendary figures, and Gol D. Roger, the singular King of the Pirates.
         </p>
 
         {/* Filter Pills */}
@@ -73,13 +75,13 @@ export const BountyBoard: React.FC = () => {
                   : 'bg-slate-900/80 border border-slate-700/80 text-slate-300 hover:border-amber-400/50 hover:text-white'
               }`}
             >
-              {f}
+              {f === 'Roger Pirates' ? '👑 ROGER PIRATES (KING)' : f}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Wanted Poster Grid with Realistic Parchment Styling */}
+      {/* Wanted Poster Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
         {filteredPosters.map((poster) => {
           const displayedValue = tickedBounties[poster.id] || poster.bounty;
@@ -90,11 +92,17 @@ export const BountyBoard: React.FC = () => {
               onClick={() => handlePosterClick(poster)}
               onMouseEnter={() => sound.playHover()}
               data-cursor="pointer"
-              className={`group relative bg-[#edd9b2] text-[#2b180d] p-5 rounded-2xl shadow-2xl transition-all duration-200 transform-gpu hover:scale-[1.04] hover:-rotate-1 border-4 border-[#bca075] cursor-pointer flex flex-col justify-between overflow-hidden ${
-                poster.isGear5 ? 'ring-4 ring-yellow-400/80 shadow-[0_0_40px_rgba(250,204,21,0.5)]' : ''
+              className={`group relative bg-[#edd9b2] text-[#2b180d] p-5 rounded-2xl shadow-2xl transition-all duration-200 transform-gpu hover:scale-[1.04] hover:-rotate-1 border-4 cursor-pointer flex flex-col justify-between overflow-hidden ${
+                poster.isPirateKing
+                  ? 'border-yellow-500 ring-4 ring-yellow-400/90 shadow-[0_0_50px_rgba(250,204,21,0.65)]'
+                  : poster.isGear5
+                  ? 'border-[#bca075] ring-4 ring-yellow-400/80 shadow-[0_0_40px_rgba(250,204,21,0.5)]'
+                  : 'border-[#bca075]'
               }`}
               style={{
-                boxShadow: poster.isGear5
+                boxShadow: poster.isPirateKing
+                  ? '0 0 45px rgba(250, 204, 21, 0.5), inset 0 0 50px rgba(162, 123, 73, 0.5)'
+                  : poster.isGear5
                   ? '0 0 35px rgba(250, 204, 21, 0.4), inset 0 0 50px rgba(162, 123, 73, 0.4)'
                   : '0 20px 35px -10px rgba(0, 0, 0, 0.8), inset 0 0 50px rgba(162, 123, 73, 0.35)'
               }}
@@ -104,8 +112,14 @@ export const BountyBoard: React.FC = () => {
                 MARINE HQ
               </div>
 
-              {/* Special Badge (Gear 5, Sunny, Concert) */}
-              {poster.isGear5 && (
+              {/* Special Badges */}
+              {poster.isPirateKing && (
+                <div className="absolute top-2 left-2 z-10 px-2.5 py-0.5 rounded bg-gradient-to-r from-amber-400 to-yellow-300 text-black text-[9px] font-black tracking-widest uppercase shadow-md flex items-center gap-1">
+                  <Crown className="w-3 h-3 text-black" />
+                  <span>KING OF THE PIRATES</span>
+                </div>
+              )}
+              {poster.isGear5 && !poster.isPirateKing && (
                 <div className="absolute top-2 left-2 z-10 px-2 py-0.5 rounded bg-yellow-400 text-black text-[8px] font-black tracking-widest uppercase shadow-md flex items-center gap-1">
                   <Sparkles className="w-2.5 h-2.5" />
                   <span>GEAR 5 WHITE FORM</span>
@@ -133,10 +147,16 @@ export const BountyBoard: React.FC = () => {
                   <img
                     src={poster.imageUrl}
                     alt={poster.name}
-                    className="w-full h-full object-cover filter sepia-[0.35] contrast-125 brightness-95 group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-contain filter contrast-110 brightness-95 group-hover:scale-105 transition-transform duration-300 bg-black/40"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = './images/crew/luffy.png';
+                    }}
                   />
                   {poster.isGear5 && (
                     <div className="absolute inset-0 bg-yellow-200/15 pointer-events-none mix-blend-screen animate-pulse" />
+                  )}
+                  {poster.isPirateKing && (
+                    <div className="absolute inset-0 bg-amber-400/10 pointer-events-none mix-blend-screen" />
                   )}
                 </div>
 
@@ -150,7 +170,7 @@ export const BountyBoard: React.FC = () => {
                   {poster.name}
                 </div>
 
-                {/* Epithet */}
+                {/* Epithet (Strictly King of the Pirates for Roger) */}
                 <div className="text-center text-[10px] font-bold text-[#7a4c28] tracking-widest uppercase">
                   "{poster.epithet}"
                 </div>
@@ -163,7 +183,7 @@ export const BountyBoard: React.FC = () => {
                 </div>
                 <div className="font-mono text-xl font-black text-[#1e0f06] flex items-center justify-center gap-1">
                   <span className="font-serif text-lg">฿</span>
-                  <span>{displayedValue.toLocaleString()}</span>
+                  <span>{displayedValue > 0 ? displayedValue.toLocaleString() : poster.bountyFormatted}</span>
                   <span className="text-[11px] font-sans font-bold text-[#6a4224]">-</span>
                 </div>
 
@@ -188,40 +208,42 @@ export const BountyBoard: React.FC = () => {
                   <ShieldAlert className="w-4 h-4 text-red-700" />
                   <span>CLASSIFIED ADMIRALTY NOTICE</span>
                 </span>
-                <h3 className="font-serif text-3xl font-black text-[#1c0d05]">
+                <h3 className="font-serif text-2xl sm:text-3xl font-black text-[#1c0d05]">
                   {selectedPoster.name}
                 </h3>
               </div>
               <button
                 onClick={() => setSelectedPoster(null)}
+                data-cursor="pointer"
                 className="p-2 rounded-full bg-black/10 hover:bg-black/20 text-[#2b180d] transition cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
-            <div className="my-5 flex gap-4">
-              <div className="w-32 h-36 rounded border-2 border-[#8c6747] overflow-hidden shrink-0 bg-black">
+            <div className="my-5 flex flex-col sm:flex-row gap-4 items-center sm:items-start">
+              <div className="w-40 h-56 rounded-xl border-2 border-[#8c6747] overflow-hidden shrink-0 bg-black flex items-center justify-center p-1 shadow-lg">
                 <img
                   src={selectedPoster.imageUrl}
                   alt={selectedPoster.name}
-                  className="w-full h-full object-cover filter sepia-[0.35]"
+                  className="w-full h-full object-contain filter contrast-110"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = './images/crew/luffy.png';
+                  }}
                 />
               </div>
-              <div>
+              <div className="space-y-2 text-left">
                 <div className="text-xs font-mono uppercase text-[#734725] font-bold">
                   AFFILIATION: {selectedPoster.affiliation}
                 </div>
-                <div className="text-2xl font-mono font-black text-red-900 mt-1">
+                <div className="text-2xl font-mono font-black text-red-900">
                   ฿ {selectedPoster.bountyFormatted}
                 </div>
-                {selectedPoster.posterNote && (
-                  <div className="inline-block mt-1 px-2 py-0.5 rounded bg-red-950 text-white text-[9px] font-mono font-bold tracking-wider uppercase">
-                    {selectedPoster.posterNote}
-                  </div>
-                )}
+                <div className="inline-block px-2.5 py-0.5 rounded bg-red-950 text-white text-[9px] font-mono font-bold tracking-wider uppercase">
+                  {selectedPoster.posterNote || selectedPoster.epithet}
+                </div>
                 <div className="mt-3 text-xs text-[#422714] leading-relaxed">
-                  <strong>Marine Intel:</strong> {selectedPoster.marineNote}
+                  <strong>Marine Intelligence Dossier:</strong> {selectedPoster.marineNote}
                 </div>
               </div>
             </div>

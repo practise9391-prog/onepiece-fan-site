@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArcData, IconicMoment, FightScene, ArcSectionChapter } from '../../data/arcsData';
+import { ArcData, IconicMoment, FightScene, ArcSectionChapter, StoryPlotScene } from '../../data/arcsData';
 import { sound } from '../../audio/soundEngine';
 import {
   X,
@@ -14,7 +14,10 @@ import {
   ArrowLeft,
   BookOpen,
   Trophy,
-  Zap
+  Zap,
+  Film,
+  CheckCircle2,
+  ChevronRight
 } from 'lucide-react';
 
 interface ArcDetailModalProps {
@@ -23,9 +26,10 @@ interface ArcDetailModalProps {
 }
 
 export const ArcDetailModal: React.FC<ArcDetailModalProps> = ({ arc, onClose }) => {
-  const [activeTab, setActiveTab] = useState<'fights' | 'chapters' | 'moments' | 'factions'>('fights');
+  const [activeTab, setActiveTab] = useState<'scenes' | 'fights' | 'chapters' | 'moments' | 'factions'>('scenes');
   const [selectedFight, setSelectedFight] = useState<FightScene>(arc.fights[0] || null);
   const [selectedMoment, setSelectedMoment] = useState<IconicMoment>(arc.iconicMoments[0] || null);
+  const [activeSceneModal, setActiveSceneModal] = useState<StoryPlotScene | null>(null);
 
   useEffect(() => {
     // Play thematic audio on entry
@@ -49,7 +53,7 @@ export const ArcDetailModal: React.FC<ArcDetailModalProps> = ({ arc, onClose }) 
     <div className="fixed inset-0 z-50 overflow-y-auto bg-black animate-fadeIn">
       {/* Thematic Background Backdrop */}
       <div
-        className="fixed inset-0 bg-cover bg-center transition-all duration-1000 filter brightness-[0.3] scale-105"
+        className="fixed inset-0 bg-cover bg-center transition-all duration-1000 filter brightness-[0.25] scale-105"
         style={{
           backgroundImage: `url(${arc.bgImage})`
         }}
@@ -114,6 +118,20 @@ export const ArcDetailModal: React.FC<ArcDetailModalProps> = ({ arc, onClose }) 
             <button
               onClick={() => {
                 sound.playHover();
+                setActiveTab('scenes');
+              }}
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold tracking-wider transition cursor-pointer flex items-center gap-1.5 ${
+                activeTab === 'scenes'
+                  ? 'bg-amber-400 text-black shadow-lg font-black'
+                  : 'text-slate-300 hover:text-white'
+              }`}
+            >
+              <Film className="w-3.5 h-3.5" />
+              <span>STORY SCENES ({arc.storyScenes ? arc.storyScenes.length : 20})</span>
+            </button>
+            <button
+              onClick={() => {
+                sound.playHover();
                 setActiveTab('fights');
               }}
               className={`px-3.5 py-1.5 rounded-xl text-xs font-bold tracking-wider transition cursor-pointer flex items-center gap-1.5 ${
@@ -137,7 +155,7 @@ export const ArcDetailModal: React.FC<ArcDetailModalProps> = ({ arc, onClose }) 
               }`}
             >
               <BookOpen className="w-3.5 h-3.5" />
-              <span>CHRONICLES & SCENES</span>
+              <span>CHRONICLES</span>
             </button>
             <button
               onClick={() => {
@@ -169,6 +187,86 @@ export const ArcDetailModal: React.FC<ArcDetailModalProps> = ({ arc, onClose }) 
             </button>
           </div>
         </div>
+
+        {/* TAB 0: 20 CHRONOLOGICAL STORY PLOT SCENES WITH TAGLINES & MOTIVATION */}
+        {activeTab === 'scenes' && (
+          <div className="mt-8 space-y-6">
+            <div className="flex items-center justify-between flex-wrap gap-2 pb-2">
+              <div className="text-xs font-mono uppercase tracking-[0.3em] text-amber-400 font-bold flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-amber-400" />
+                <span>20 COMPLETE CHRONOLOGICAL PLOT SCENES • TAGLINES & MOTIVATIONAL LESSONS</span>
+              </div>
+              <span className="text-xs font-mono text-slate-400">
+                {arc.storyScenes ? arc.storyScenes.length : 0} Canon Scenes Available
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {arc.storyScenes && arc.storyScenes.map((scene) => (
+                <div
+                  key={scene.id}
+                  onClick={() => {
+                    sound.playClick(600, 0.1);
+                    setActiveSceneModal(scene);
+                  }}
+                  onMouseEnter={() => sound.playHover()}
+                  data-cursor="pointer"
+                  className="group relative rounded-3xl overflow-hidden border border-white/10 hover:border-amber-400/60 bg-slate-950/85 shadow-xl transition-all duration-300 hover:-translate-y-1.5 cursor-pointer flex flex-col justify-between"
+                >
+                  {/* Top Image Preview Banner */}
+                  <div className="relative h-48 w-full overflow-hidden bg-black/60">
+                    <img
+                      src={scene.imageUrl}
+                      alt={scene.title}
+                      className="w-full h-full object-cover filter contrast-110 brightness-95 group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
+
+                    {/* Scene Badge & Number */}
+                    <div className="absolute top-3 left-3 flex items-center gap-2">
+                      <span className="px-2.5 py-1 rounded-lg bg-black/80 backdrop-blur-md border border-amber-400/40 text-[10px] font-mono font-bold text-amber-300 uppercase">
+                        SCENE {scene.sceneNumber < 10 ? `0${scene.sceneNumber}` : scene.sceneNumber} / 20
+                      </span>
+                      <span className="px-2.5 py-1 rounded-lg bg-black/80 backdrop-blur-md border border-white/10 text-[10px] font-mono text-slate-300">
+                        {scene.badge}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Body Content */}
+                  <div className="p-6 flex-1 flex flex-col justify-between">
+                    <div>
+                      <h3 className="font-cinzel text-xl font-black text-white group-hover:text-amber-300 transition-colors">
+                        {scene.title}
+                      </h3>
+
+                      {/* Tagline / Punchline */}
+                      <p className="mt-1.5 text-xs sm:text-sm font-bold text-amber-400 font-cinzel tracking-wide">
+                        "{scene.tagline}"
+                      </p>
+
+                      {/* Concise Story Summary */}
+                      <p className="mt-3 text-xs sm:text-sm text-slate-300 leading-relaxed font-sans line-clamp-3">
+                        {scene.storySummary}
+                      </p>
+                    </div>
+
+                    {/* Motivational Takeaway Box */}
+                    <div className="mt-4 pt-3 border-t border-white/10">
+                      <div className="text-[9px] font-mono text-amber-300 uppercase tracking-widest font-black mb-1 flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3 text-amber-400" />
+                        <span>MOTIVATION & LESSON</span>
+                      </div>
+                      <p className="text-xs text-slate-200 bg-white/5 p-2.5 rounded-xl border border-white/5 italic">
+                        {scene.motivationLine}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* TAB 1: LEGENDARY FIGHT SCENES */}
         {activeTab === 'fights' && (
@@ -250,13 +348,10 @@ export const ArcDetailModal: React.FC<ArcDetailModalProps> = ({ arc, onClose }) 
                       {selectedFight.description}
                     </p>
 
-                    {/* Outcome Box */}
-                    <div className="mt-6 p-4 rounded-2xl bg-black/60 border border-white/10 flex items-center gap-3">
-                      <Trophy className="w-5 h-5 text-amber-400 shrink-0" />
-                      <div className="text-xs sm:text-sm text-slate-300">
-                        <strong className="text-amber-400 uppercase font-mono mr-1">OUTCOME:</strong>
-                        {selectedFight.outcome}
-                      </div>
+                    <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
+                      <span className="text-xs font-mono text-amber-400 font-bold uppercase">
+                        OUTCOME: {selectedFight.outcome}
+                      </span>
                     </div>
                   </div>
                 )}
@@ -370,20 +465,17 @@ export const ArcDetailModal: React.FC<ArcDetailModalProps> = ({ arc, onClose }) 
                   </h2>
 
                   {selectedMoment.quote && (
-                    <div className="my-5 p-5 rounded-2xl bg-amber-500/10 border-l-4 border-amber-400 text-amber-200 italic font-serif text-base sm:text-lg flex items-start gap-3">
-                      <Quote className="w-6 h-6 text-amber-400 shrink-0 mt-1" />
-                      <div>
-                        <div>"{selectedMoment.quote}"</div>
-                        {selectedMoment.speaker && (
-                          <div className="mt-2 text-xs font-mono not-italic font-bold text-amber-400 uppercase">
-                            — {selectedMoment.speaker}
-                          </div>
-                        )}
-                      </div>
+                    <div className="my-5 p-4 rounded-2xl bg-amber-500/10 border-l-4 border-amber-400 text-amber-100 font-serif italic text-base sm:text-lg">
+                      "{selectedMoment.quote}"
+                      {selectedMoment.speaker && (
+                        <div className="mt-2 text-xs font-mono not-italic font-bold text-amber-400 uppercase">
+                          — {selectedMoment.speaker}
+                        </div>
+                      )}
                     </div>
                   )}
 
-                  <p className="text-slate-200 text-sm sm:text-base leading-relaxed">
+                  <p className="text-slate-200 text-sm sm:text-base leading-relaxed mt-4 font-sans">
                     {selectedMoment.description}
                   </p>
                 </div>
@@ -395,41 +487,103 @@ export const ArcDetailModal: React.FC<ArcDetailModalProps> = ({ arc, onClose }) 
         {/* TAB 4: FACTIONS */}
         {activeTab === 'factions' && (
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {arc.factions.map((f, i) => (
-              <div
-                key={f.name}
-                className="glass-card p-6 rounded-3xl border border-white/10"
-              >
-                <div className="text-[10px] font-mono text-amber-400 uppercase font-black mb-1">
-                  FACTION 0{i + 1}
-                </div>
-                <h3 className="font-cinzel text-xl font-bold text-white">
+            {arc.factions.map((f) => (
+              <div key={f.name} className="glass-card p-6 rounded-3xl border border-white/10">
+                <span className="px-2.5 py-1 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 text-[10px] font-mono font-bold uppercase">
+                  {f.banner}
+                </span>
+                <h3 className="font-cinzel text-xl font-bold text-white mt-3 mb-4">
                   {f.name}
                 </h3>
-                <p className="text-xs text-amber-300 font-semibold uppercase mt-0.5">
-                  {f.banner}
-                </p>
-
-                <div className="mt-4 pt-4 border-t border-white/10">
-                  <div className="text-[10px] font-mono text-slate-400 uppercase tracking-widest mb-2">
-                    COMMANDERS & ROSTER
-                  </div>
-                  <div className="flex flex-wrap gap-1.5">
-                    {f.members.map((m) => (
-                      <span
-                        key={m}
-                        className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-xs text-slate-200"
-                      >
-                        {m}
-                      </span>
-                    ))}
-                  </div>
+                <div className="space-y-1.5">
+                  {f.members.map((m) => (
+                    <div key={m} className="text-xs text-slate-300 flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                      <span>{m}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             ))}
           </div>
         )}
       </main>
+
+      {/* Expanded Scene Inspection Modal */}
+      {activeSceneModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl animate-fadeIn">
+          <div className="relative w-full max-w-2xl bg-slate-950 border border-amber-500/40 rounded-3xl p-6 sm:p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-start justify-between pb-4 border-b border-white/10">
+              <div>
+                <span className="text-xs font-mono uppercase text-amber-400 font-bold">
+                  SCENE {activeSceneModal.sceneNumber < 10 ? `0${activeSceneModal.sceneNumber}` : activeSceneModal.sceneNumber} OF 20 • {activeSceneModal.badge}
+                </span>
+                <h3 className="font-cinzel text-2xl sm:text-3xl font-black text-white mt-0.5">
+                  {activeSceneModal.title}
+                </h3>
+                <div className="text-sm font-cinzel text-amber-300 font-bold mt-1">
+                  "{activeSceneModal.tagline}"
+                </div>
+              </div>
+
+              <button
+                onClick={() => setActiveSceneModal(null)}
+                className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Scene Banner Image */}
+            <div className="my-6 relative h-64 rounded-2xl overflow-hidden bg-black/60 border border-white/10">
+              <img
+                src={activeSceneModal.imageUrl}
+                alt={activeSceneModal.title}
+                className="w-full h-full object-cover filter contrast-105 brightness-95"
+              />
+            </div>
+
+            {/* Dialogue Quote if available */}
+            {activeSceneModal.keyDialogue && (
+              <div className="my-4 p-4 rounded-2xl bg-amber-500/10 border-l-4 border-amber-400 text-amber-100 font-serif italic text-base">
+                "{activeSceneModal.keyDialogue}"
+                {activeSceneModal.speaker && (
+                  <div className="mt-1 text-xs font-mono not-italic font-bold text-amber-400 uppercase">
+                    — {activeSceneModal.speaker}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Plot Summary */}
+            <div className="p-4 rounded-2xl bg-white/5 border border-white/10 my-4">
+              <div className="text-[10px] font-mono text-slate-400 uppercase font-bold tracking-wider mb-1">
+                CANON STORY PLOT
+              </div>
+              <p className="text-sm text-slate-200 leading-relaxed font-sans">
+                {activeSceneModal.storySummary}
+              </p>
+            </div>
+
+            {/* Motivational Lesson */}
+            <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 my-4">
+              <div className="text-[10px] font-mono text-amber-400 uppercase font-bold tracking-wider mb-1">
+                MOTIVATIONAL TAKEAWAY & LIFE LESSON
+              </div>
+              <p className="text-sm text-amber-200 leading-relaxed font-sans font-medium">
+                {activeSceneModal.motivationLine}
+              </p>
+            </div>
+
+            <button
+              onClick={() => setActiveSceneModal(null)}
+              className="w-full mt-4 py-2.5 rounded-xl bg-amber-400 text-black font-cinzel font-bold text-sm tracking-wider uppercase hover:bg-amber-300 transition"
+            >
+              CLOSE SCENE
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

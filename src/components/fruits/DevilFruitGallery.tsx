@@ -7,7 +7,7 @@ export const DevilFruitGallery: React.FC = () => {
   const [selectedType, setSelectedType] = useState<FruitType | 'ALL'>('ALL');
   const [activeFruit, setActiveFruit] = useState<DevilFruit | null>(null);
 
-  const types: (FruitType | 'ALL')[] = ['ALL', 'Paramecia', 'Zoan', 'Logia'];
+  const types: (FruitType | 'ALL')[] = ['ALL', 'Paramecia', 'Zoan', 'Logia', 'Synthetic & Vegapunk Tech'];
 
   const filteredFruits = selectedType === 'ALL'
     ? DEVIL_FRUITS
@@ -29,7 +29,7 @@ export const DevilFruitGallery: React.FC = () => {
       <div className="text-center mb-12">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold tracking-widest uppercase mb-3">
           <Sparkles className="w-3.5 h-3.5" />
-          <span>MYSTICAL ARTIFACTS OF THE SEA</span>
+          <span>MYSTICAL ARTIFACTS & SCIENTIFIC REPLICATIONS</span>
         </div>
 
         <h2 className="font-cinzelDeco text-3xl sm:text-5xl md:text-6xl font-black text-white tracking-wider">
@@ -37,7 +37,7 @@ export const DevilFruitGallery: React.FC = () => {
         </h2>
 
         <p className="mt-3 text-slate-400 max-w-2xl mx-auto text-sm sm:text-base font-medium">
-          The incarnation of the Sea Devils. Explore the three supreme classifications: Paramecia, Zoan, and Logia.
+          The incarnations of the Sea Devils and Dr. Vegapunk’s lineage factor synthetic breakthroughs: Paramecia, Zoan, Logia, and Artificial Creations.
         </p>
 
         {/* Category Filters */}
@@ -56,7 +56,7 @@ export const DevilFruitGallery: React.FC = () => {
                   : 'bg-slate-900/80 border border-slate-700/80 text-slate-300 hover:border-amber-400/50 hover:text-white'
               }`}
             >
-              {type.toUpperCase()}
+              {type === 'Synthetic & Vegapunk Tech' ? 'VEGAPUNK & SYNTHETIC' : type.toUpperCase()}
             </button>
           ))}
         </div>
@@ -78,29 +78,42 @@ export const DevilFruitGallery: React.FC = () => {
             {/* Top Badge */}
             <div className="flex items-center justify-between mb-4">
               <span className="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-mono text-amber-300 font-bold uppercase tracking-wider">
-                {fruit.type}
+                {fruit.type === 'Synthetic & Vegapunk Tech' ? 'SYNTHETIC' : fruit.type}
               </span>
-              <span className="text-[10px] font-mono text-slate-500 uppercase">
-                {fruit.subType || 'CANON'}
+              <span className="text-[10px] font-mono text-slate-500 uppercase truncate max-w-[130px]" title={fruit.subType || 'CANON'}>
+                {fruit.subType ? fruit.subType.split(' ')[0] : 'CANON'}
               </span>
             </div>
 
-            {/* 3D Swirling Fruit Orb Canvas Representation */}
-            <div className="relative w-32 h-32 mx-auto my-4 flex items-center justify-center">
+            {/* Fruit Visual Representation */}
+            <div className="relative w-36 h-36 mx-auto my-4 flex items-center justify-center">
               {/* Outer Glow Halo */}
               <div
                 className={`absolute inset-0 rounded-full bg-gradient-to-tr ${fruit.gradient} blur-xl opacity-40 group-hover:opacity-80 transition-opacity duration-500 animate-pulse`}
               />
 
-              {/* 3D Sphere with custom spirals */}
-              <div
-                className={`w-24 h-24 rounded-full bg-gradient-to-tr ${fruit.gradient} border-2 border-white/40 shadow-inner flex items-center justify-center transform group-hover:rotate-12 group-hover:scale-110 transition-transform duration-700`}
-              >
-                {/* Spiral swirls pattern inside fruit */}
-                <div className="w-16 h-16 rounded-full border-2 border-dashed border-white/50 animate-spin-slow flex items-center justify-center">
-                  <div className="w-8 h-8 rounded-full border border-white/60" />
+              {fruit.image ? (
+                <div className="relative z-10 w-28 h-28 rounded-2xl overflow-hidden border border-white/20 shadow-2xl bg-black/40 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 flex items-center justify-center p-1">
+                  <img
+                    src={fruit.image}
+                    alt={fruit.name}
+                    className="w-full h-full object-contain filter drop-shadow-[0_0_12px_rgba(255,255,255,0.3)]"
+                    onError={(e) => {
+                      // Fallback if image fails
+                      (e.target as HTMLElement).style.display = 'none';
+                    }}
+                  />
                 </div>
-              </div>
+              ) : (
+                /* 3D Sphere with custom spirals */
+                <div
+                  className={`w-24 h-24 rounded-full bg-gradient-to-tr ${fruit.gradient} border-2 border-white/40 shadow-inner flex items-center justify-center transform group-hover:rotate-12 group-hover:scale-110 transition-transform duration-700`}
+                >
+                  <div className="w-16 h-16 rounded-full border-2 border-dashed border-white/50 animate-spin-slow flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-full border border-white/60" />
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Title & Info */}
@@ -131,15 +144,26 @@ export const DevilFruitGallery: React.FC = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl animate-fadeIn">
           <div className="relative w-full max-w-xl bg-slate-950 border border-amber-500/40 rounded-3xl p-6 sm:p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
             <div className="flex items-start justify-between pb-4 border-b border-white/10">
-              <div>
-                <span className="text-xs font-mono uppercase text-amber-400 font-bold">
-                  {activeFruit.type} {activeFruit.subType && `• ${activeFruit.subType}`}
-                </span>
-                <h3 className="font-cinzel text-2xl sm:text-3xl font-bold text-white mt-0.5">
-                  {activeFruit.name}
-                </h3>
-                <div className="text-xs font-mono text-slate-400 italic">
-                  {activeFruit.japaneseName} ({activeFruit.romanized})
+              <div className="flex items-center gap-4">
+                {activeFruit.image && (
+                  <div className="w-16 h-16 rounded-2xl overflow-hidden border border-amber-500/30 bg-black/60 shrink-0 p-1 flex items-center justify-center shadow-lg">
+                    <img
+                      src={activeFruit.image}
+                      alt={activeFruit.name}
+                      className="w-full h-full object-contain filter drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]"
+                    />
+                  </div>
+                )}
+                <div>
+                  <span className="text-xs font-mono uppercase text-amber-400 font-bold">
+                    {activeFruit.type} {activeFruit.subType && `• ${activeFruit.subType}`}
+                  </span>
+                  <h3 className="font-cinzel text-2xl sm:text-3xl font-bold text-white mt-0.5">
+                    {activeFruit.name}
+                  </h3>
+                  <div className="text-xs font-mono text-slate-400 italic">
+                    {activeFruit.japaneseName} ({activeFruit.romanized})
+                  </div>
                 </div>
               </div>
 

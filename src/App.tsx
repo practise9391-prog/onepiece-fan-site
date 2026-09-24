@@ -14,9 +14,12 @@ import { BountyBoard } from './components/bounties/BountyBoard';
 import { DevilFruitGallery } from './components/fruits/DevilFruitGallery';
 import { GrandLineMap } from './components/map/GrandLineMap';
 import { VoyageTimeline } from './components/timeline/VoyageTimeline';
+import { QuotesSanctuary } from './components/quotes/QuotesSanctuary';
+import { WeaponsEncyclopedia } from './components/weapons/WeaponsEncyclopedia';
+import { PirateKingOath } from './components/oath/PirateKingOath';
 import { Compass, Anchor, ArrowUp } from 'lucide-react';
 
-export type AppView = 'home' | 'arcs' | 'crew' | 'bounties' | 'devil-fruits' | 'world' | 'timeline';
+export type AppView = 'home' | 'arcs' | 'crew' | 'bounties' | 'devil-fruits' | 'quotes' | 'blades' | 'oath' | 'world' | 'timeline';
 
 export const App: React.FC = () => {
   const [stage, setStage] = useState<'intro' | 'timeskip' | 'main'>('intro');
@@ -34,11 +37,11 @@ export const App: React.FC = () => {
     // Set appropriate theme for the section
     if (view === 'home') {
       setActiveTheme('gear5');
-    } else if (view === 'crew') {
+    } else if (view === 'crew' || view === 'blades') {
       setActiveTheme('zoro');
     } else if (view === 'arcs' || view === 'world') {
       setActiveTheme('ocean');
-    } else if (view === 'bounties') {
+    } else if (view === 'bounties' || view === 'oath') {
       setActiveTheme('gear5');
     } else {
       setActiveTheme('default');
@@ -112,6 +115,18 @@ export const App: React.FC = () => {
 
             {currentView === 'devil-fruits' && (
               <DevilFruitGallery />
+            )}
+
+            {currentView === 'quotes' && (
+              <QuotesSanctuary />
+            )}
+
+            {currentView === 'blades' && (
+              <WeaponsEncyclopedia />
+            )}
+
+            {currentView === 'oath' && (
+              <PirateKingOath />
             )}
 
             {currentView === 'world' && (

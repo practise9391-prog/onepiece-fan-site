@@ -31,6 +31,9 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'crew', label: 'CREW & THEMES' },
     { id: 'bounties', label: 'BOUNTIES' },
     { id: 'devil-fruits', label: 'DEVIL FRUITS' },
+    { id: 'quotes', label: 'QUOTES' },
+    { id: 'blades', label: 'BLADES & WEAPONS' },
+    { id: 'oath', label: 'PIRATE KING OATH' },
     { id: 'world', label: 'WORLD MAP' },
     { id: 'timeline', label: 'TIMELINE' },
   ];
