@@ -204,3 +204,4 @@ export const SoloLevelingIntro: React.FC<SoloLevelingIntroProps> = ({ onComplete
     </div>
   );
 };
+

@@ -169,3 +169,4 @@ export const NarutoTransition: React.FC<NarutoTransitionProps> = ({ onComplete }
     </div>
   );
 };
+

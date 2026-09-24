@@ -198,3 +198,4 @@ export const NarutoIntro: React.FC<NarutoIntroProps> = ({ onComplete, onSkipToMa
     </div>
   );
 };
+

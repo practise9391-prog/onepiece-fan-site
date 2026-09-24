@@ -174,3 +174,4 @@ export const DemonSlayerIntro: React.FC<DemonSlayerIntroProps> = ({ onComplete, 
     </div>
   );
 };
+
