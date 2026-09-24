@@ -1,479 +1,789 @@
 import React, { useState } from 'react';
-import { SHADOW_ARMY, TOP_HUNTERS, GATES_AND_DUNGEONS, ShadowSoldier, HunterDossier } from './data/soloLevelingData';
+import {
+  TOP_HUNTERS,
+  SHADOW_ARMY,
+  SOLO_LEVELING_ARCS,
+  SYSTEM_SKILLS,
+  SOLO_LEVELING_QUOTES,
+  MONARCH_WEAPONS,
+  SOLO_LEVELING_OATH,
+  HunterDossier,
+  SoloLevelingArc
+} from './data/soloLevelingData';
 import { universeAudio } from '../anime-universe/audio/universeAudio';
-import { Zap, Shield, Swords, Sparkles, ChevronRight, X, User, Award, Activity, Skull } from 'lucide-react';
+import { SoloLevelingIntro } from './components/intro/SoloLevelingIntro';
+import { SoloLevelingTransition } from './components/intro/SoloLevelingTransition';
+import {
+  Zap,
+  Shield,
+  Swords,
+  Sparkles,
+  ChevronRight,
+  X,
+  User,
+  Award,
+  Activity,
+  Skull,
+  Scroll,
+  Quote,
+  RotateCcw,
+  Volume2,
+  VolumeX,
+  ArrowUp,
+  Users,
+  Copy,
+  Check
+} from 'lucide-react';
+
+export type SoloLevelingView = 'hunters' | 'gates' | 'shadows' | 'skills' | 'quotes' | 'blades' | 'oath';
 
 export const SoloLevelingApp: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'system' | 'shadows' | 'hunters' | 'gates'>('system');
+  const [stage, setStage] = useState<'intro' | 'transition' | 'main'>('intro');
+  const [currentView, setCurrentView] = useState<SoloLevelingView>('hunters');
+  const [selectedHunter, setSelectedHunter] = useState<HunterDossier | null>(null);
+  const [showFamilyModal, setShowFamilyModal] = useState<boolean>(false);
+  const [selectedArc, setSelectedArc] = useState<SoloLevelingArc | null>(null);
   const [ariseTriggered, setAriseTriggered] = useState(false);
-  const [selectedShadow, setSelectedShadow] = useState<ShadowSoldier | null>(null);
+  const [copiedQuoteId, setCopiedQuoteId] = useState<string | null>(null);
+  const [isAudioMuted, setIsAudioMuted] = useState(universeAudio.getIsMuted());
+
+  const handleNavigate = (view: SoloLevelingView) => {
+    universeAudio.playClick(520, 0.08);
+    setCurrentView(view);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const toggleSound = () => {
+    const unmuted = universeAudio.toggleMute();
+    setIsAudioMuted(!unmuted);
+    if (unmuted) universeAudio.playClick(600, 0.08);
+  };
 
   const handleArise = () => {
-    universeAudio.playSystemChime();
+    universeAudio.playAriseEcho();
     setAriseTriggered(true);
     setTimeout(() => setAriseTriggered(false), 3000);
   };
 
+  const handleCopyQuote = (id: string, text: string) => {
+    navigator.clipboard.writeText(text);
+    universeAudio.playClick(720, 0.05);
+    setCopiedQuoteId(id);
+    setTimeout(() => setCopiedQuoteId(null), 2500);
+  };
+
+  const scrollToTop = () => {
+    universeAudio.playClick(600, 0.08);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
-    <div className="min-h-screen bg-[#05060d] text-slate-100 font-sans selection:bg-blue-600 selection:text-white pb-24">
-      {/* Top Futuristic System Header */}
-      <header className="sticky top-0 z-40 bg-black/85 backdrop-blur-xl border-b border-blue-500/30 px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 p-0.5 shadow-lg shadow-blue-500/30">
-            <div className="w-full h-full rounded-2xl bg-black flex items-center justify-center">
-              <Zap className="w-5 h-5 text-blue-400 animate-pulse" />
-            </div>
-          </div>
-          <div>
-            <h1 className="font-cinzelDeco font-black text-lg text-white tracking-widest leading-none">
-              SOLO LEVELING
-            </h1>
-            <span className="text-[9px] font-mono tracking-[0.3em] text-blue-400 uppercase">
-              SHADOW MONARCH SYSTEM • 나 혼자만 레벨업
-            </span>
-          </div>
-        </div>
+    <div className="relative min-h-screen bg-[#05060d] text-slate-100 font-sans selection:bg-blue-600 selection:text-white flex flex-col justify-between">
+      {/* STAGE 1: CARTENON TEMPLE REAWAKENING */}
+      {stage === 'intro' && (
+        <SoloLevelingIntro
+          onComplete={() => setStage('transition')}
+          onSkipToMain={() => setStage('main')}
+        />
+      )}
 
-        {/* System Navigation Tabs */}
-        <nav className="flex items-center gap-1 bg-slate-950 p-1.5 rounded-full border border-white/10 text-xs font-mono font-bold">
-          <button
-            onClick={() => {
-              universeAudio.playHover();
-              setActiveTab('system');
-            }}
-            className={`px-4 py-1.5 rounded-full transition cursor-pointer ${
-              activeTab === 'system'
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/40 font-black'
-                : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            STATUS WINDOW
-          </button>
-          <button
-            onClick={() => {
-              universeAudio.playHover();
-              setActiveTab('shadows');
-            }}
-            className={`px-4 py-1.5 rounded-full transition cursor-pointer ${
-              activeTab === 'shadows'
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/40 font-black'
-                : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            SHADOW ARMY
-          </button>
-          <button
-            onClick={() => {
-              universeAudio.playHover();
-              setActiveTab('hunters');
-            }}
-            className={`px-4 py-1.5 rounded-full transition cursor-pointer ${
-              activeTab === 'hunters'
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/40 font-black'
-                : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            HUNTER DOSSIER
-          </button>
-          <button
-            onClick={() => {
-              universeAudio.playHover();
-              setActiveTab('gates');
-            }}
-            className={`px-4 py-1.5 rounded-full transition cursor-pointer ${
-              activeTab === 'gates'
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/40 font-black'
-                : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            GATES & DUNGEONS
-          </button>
-        </nav>
-      </header>
+      {/* STAGE 2: SYSTEM LEVEL UP & SHADOW MONARCH DAWN */}
+      {stage === 'transition' && (
+        <SoloLevelingTransition onComplete={() => setStage('main')} />
+      )}
 
-      {/* Cinematic Hero: Sung Jin-Woo & The Shadow Monarch */}
-      <section className="relative px-6 py-16 sm:py-20 max-w-7xl mx-auto overflow-hidden">
-        {/* Shadow Purple Glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[650px] bg-blue-600/15 rounded-full filter blur-[130px] pointer-events-none" />
-
-        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-          <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-mono font-bold tracking-widest uppercase">
-              <Activity className="w-3.5 h-3.5 text-blue-400" />
-              <span>SYSTEM NOTIFICATION: QUEST COMPLETED</span>
-            </div>
-
-            <h2 className="font-cinzelDeco text-4xl sm:text-6xl font-black text-white tracking-wider leading-tight">
-              MONARCH OF <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-purple-400">SHADOWS</span>
-            </h2>
-
-            <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl font-mono">
-              [Player Sung Jin-Woo has inherited the heart of the Shadow Monarch Ashborn. All restrictions have been lifted.]
-            </p>
-
-            {/* Interactive "ARISE" Extraction Action */}
-            <div className="pt-2 flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
-              <button
-                onClick={handleArise}
-                data-cursor="pointer"
-                className="group relative px-8 py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-700 text-white font-cinzel font-black tracking-widest uppercase shadow-2xl hover:scale-105 transition-all cursor-pointer overflow-hidden border border-blue-400/40"
-              >
-                <span className="relative z-10 flex items-center gap-2">
-                  <Skull className="w-5 h-5 text-blue-300" />
-                  <span>COMMAND: "ARISE" (일어나라)</span>
-                </span>
-                <span className="absolute inset-0 bg-blue-400 opacity-0 group-hover:opacity-30 transition-opacity blur-md" />
-              </button>
-
-              {ariseTriggered && (
-                <div className="text-xs font-mono text-blue-400 font-bold animate-pulse">
-                  ✦ SHADOW EXTRACTION SUCCESSFUL! 130,000 SHADOWS AWAKENED!
+      {/* STAGE 3: MAIN SYSTEM SANCTUARY */}
+      {stage === 'main' && (
+        <>
+          {/* Top System Header */}
+          <header className="sticky top-0 z-40 bg-black/90 backdrop-blur-xl border-b border-blue-500/25 px-4 sm:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4 shadow-[0_4px_30px_rgba(0,0,0,0.8)]">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 p-0.5 shadow-lg shadow-blue-500/30">
+                <div className="w-full h-full rounded-2xl bg-black flex items-center justify-center">
+                  <Zap className="w-5 h-5 text-blue-400 animate-pulse" />
                 </div>
-              )}
-            </div>
-          </div>
-
-          {/* Sung Jin-Woo Visual */}
-          <div className="lg:col-span-5 flex justify-center">
-            <div className="relative w-80 h-96 sm:w-96 sm:h-[420px] rounded-3xl overflow-hidden border border-blue-500/40 bg-gradient-to-t from-blue-950/80 via-black to-slate-950 p-4 flex items-center justify-center shadow-2xl">
-              <img
-                src="./images/solo-leveling/jinwoo.png"
-                alt="Sung Jin-Woo"
-                className="max-h-full max-w-full object-contain filter drop-shadow-[0_0_25px_rgba(59,130,246,0.6)] hover:scale-105 transition-transform duration-500"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* MAIN CONTENT AREA */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* TAB 1: AUTHENTIC PLAYER STATUS WINDOW */}
-        {activeTab === 'system' && (
-          <div className="max-w-4xl mx-auto">
-            <div className="rounded-3xl p-6 sm:p-10 bg-slate-950/90 border-2 border-blue-500/50 shadow-[0_0_50px_rgba(59,130,246,0.25)] font-mono">
-              <div className="flex items-center justify-between pb-4 border-b border-blue-500/30 mb-6">
-                <div className="flex items-center gap-2 text-blue-400 text-xs font-bold tracking-widest uppercase">
-                  <Activity className="w-4 h-4 animate-spin-slow" />
-                  <span>[STATUS WINDOW - PLAYER: SUNG JIN-WOO]</span>
-                </div>
-                <span className="px-2.5 py-1 rounded bg-blue-500/20 text-blue-300 text-xs font-bold border border-blue-400/40">
-                  LEVEL 146
+              </div>
+              <div>
+                <h1 className="font-cinzelDeco font-black text-base sm:text-lg text-white tracking-widest leading-none">
+                  SOLO LEVELING
+                </h1>
+                <span className="text-[8px] sm:text-[9px] font-mono tracking-[0.25em] text-blue-400 uppercase">
+                  SHADOW MONARCH SYSTEM • 나 혼자만 레벨업
                 </span>
               </div>
+            </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm">
-                <div className="space-y-3">
-                  <div>
-                    <span className="text-slate-400">JOB: </span>
-                    <strong className="text-purple-400 font-bold">Shadow Monarch (그림자 군주)</strong>
+            {/* Navigation Tabs */}
+            <nav className="flex flex-wrap items-center gap-1 bg-slate-950/80 p-1.5 rounded-full border border-white/10 text-xs font-mono font-bold">
+              {[
+                { id: 'hunters', label: 'HUNTERS & MONARCHS' },
+                { id: 'gates', label: 'GATES & ARCS (20 SCENES)' },
+                { id: 'shadows', label: 'SHADOW ARMY' },
+                { id: 'skills', label: 'SYSTEM SKILLS' },
+                { id: 'quotes', label: 'QUOTES SANCTUARY' },
+                { id: 'blades', label: 'MONARCH WEAPONS' },
+                { id: 'oath', label: 'SACRED DECREE' }
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => handleNavigate(tab.id as SoloLevelingView)}
+                  className={`px-3.5 py-1.5 rounded-full transition cursor-pointer ${
+                    currentView === tab.id
+                      ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/40 font-black'
+                      : 'text-slate-400 hover:text-white'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </nav>
+
+            {/* Controls: Sound & Replay */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={toggleSound}
+                className="p-2 rounded-full bg-slate-900 border border-blue-500/30 text-blue-300 hover:text-white hover:border-blue-400 transition cursor-pointer"
+                title={isAudioMuted ? 'Unmute Audio' : 'Mute Audio'}
+              >
+                {isAudioMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+              </button>
+              <button
+                onClick={() => setStage('intro')}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900 border border-blue-500/30 text-blue-300 hover:text-white hover:border-blue-400 text-xs font-mono font-bold transition cursor-pointer"
+                title="Replay System Intro"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">REPLAY INTRO</span>
+              </button>
+            </div>
+          </header>
+
+          {/* MAIN CONTENT AREA */}
+          <main className="relative z-10 flex-1 max-w-7xl mx-auto px-4 sm:px-8 py-10 w-full space-y-16">
+            {/* VIEW 1: HUNTERS & MONARCHS (CHARACTER SANCTUARY) */}
+            {currentView === 'hunters' && (
+              <section className="space-y-10 animate-fadeIn">
+                <div className="text-center space-y-3">
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-mono font-bold tracking-widest uppercase">
+                    <Activity className="w-3.5 h-3.5 text-blue-400 animate-pulse" />
+                    <span>NATIONAL LEVEL & S-RANK HUNTER DOSSIERS</span>
                   </div>
-                  <div>
-                    <span className="text-slate-400">TITLE: </span>
-                    <strong className="text-amber-300">The One Who Overcame Adversity</strong>
+                  <h2 className="font-cinzel text-3xl sm:text-5xl font-black text-white">
+                    The World’s Strongest
+                  </h2>
+                  <p className="text-sm text-slate-400 max-w-2xl mx-auto">
+                    The supreme apex of humanity’s awakened hunters. From national level titans who survived dragon raids to the singular sovereign of the dead.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {TOP_HUNTERS.map((char) => (
+                    <div
+                      key={char.id}
+                      className="group relative rounded-3xl bg-slate-950/80 border border-white/10 hover:border-blue-500/50 p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 shadow-xl hover:shadow-[0_0_35px_rgba(59,130,246,0.3)]"
+                    >
+                      <div className="space-y-4">
+                        <div className="relative w-full h-64 rounded-2xl overflow-hidden bg-black/60 border border-white/5 flex items-center justify-center">
+                          <img
+                            src={char.image}
+                            alt={char.name}
+                            className="w-full h-full object-contain filter group-hover:scale-105 transition-transform duration-500"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = './images/solo-leveling/jinwoo.png';
+                            }}
+                          />
+                          <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-black/80 border border-blue-500/40 text-[10px] font-mono text-blue-400 uppercase font-black">
+                            {char.rank}
+                          </div>
+                        </div>
+
+                        <div>
+                          <div className="text-xs font-mono text-blue-400 font-bold">
+                            {char.koreanName} • {char.guild}
+                          </div>
+                          <h3 className="font-cinzel text-2xl font-bold text-white mt-1">
+                            {char.name}
+                          </h3>
+                        </div>
+
+                        <p className="text-xs text-slate-300 line-clamp-3 leading-relaxed">
+                          {char.description}
+                        </p>
+
+                        <div className="p-3 rounded-xl bg-black/60 border border-white/10 space-y-1">
+                          <div className="text-[10px] font-mono text-indigo-400 uppercase font-bold flex items-center gap-1.5">
+                            <Zap className="w-3 h-3" /> SIGNATURE ABILITY:
+                          </div>
+                          <div className="text-xs text-slate-200">{char.signatureAbility}</div>
+                        </div>
+                      </div>
+
+                      <div className="pt-5 mt-4 border-t border-white/10 flex items-center justify-between gap-3">
+                        <button
+                          onClick={() => {
+                            universeAudio.playSystemChime();
+                            setSelectedHunter(char);
+                            setShowFamilyModal(true);
+                          }}
+                          className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/30 text-xs font-mono font-bold tracking-wider uppercase transition cursor-pointer shadow-lg"
+                        >
+                          <Users className="w-3.5 h-3.5" />
+                          <span>FAMILY & MENTORS</span>
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* ARISE Interactive Showcase Banner */}
+                <div className="relative rounded-3xl p-8 bg-gradient-to-r from-blue-950/60 via-purple-950/40 to-black border-2 border-indigo-500/40 text-center space-y-6 shadow-[0_0_50px_rgba(99,102,241,0.2)]">
+                  <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-mono uppercase font-bold">
+                    <Skull className="w-3.5 h-3.5" /> MONARCH INHERITANCE
                   </div>
-                  <div>
-                    <span className="text-slate-400">FATIGUE: </span>
-                    <strong className="text-emerald-400 font-bold">0%</strong>
+                  <h3 className="font-cinzelDeco text-3xl sm:text-4xl font-black text-white">
+                    "Are You Ready to Command the Shadow Army?"
+                  </h3>
+                  <button
+                    onClick={handleArise}
+                    className="px-8 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-cinzelDeco font-black text-sm tracking-widest uppercase transition-all shadow-xl hover:scale-105 cursor-pointer"
+                  >
+                    TRIGGER COMMAND: ARISE (일어나라)
+                  </button>
+
+                  {ariseTriggered && (
+                    <div className="font-cinzelDeco text-2xl text-indigo-300 animate-pulse drop-shadow-[0_0_20px_#818cf8]">
+                      ⚡ THE ARMY OF MILLIONS RISES FROM THE SHADOWS! ⚡
+                    </div>
+                  )}
+                </div>
+              </section>
+            )}
+
+            {/* VIEW 2: GATES & STORY ARCS (20 SCENES PER ARC) */}
+            {currentView === 'gates' && (
+              <section className="space-y-10 animate-fadeIn">
+                <div className="text-center space-y-3">
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-mono font-bold tracking-widest uppercase">
+                    <Scroll className="w-3.5 h-3.5 text-blue-400" />
+                    <span>DUNGEON RAIDS & GATE EXPEDITIONS • 20 SCENES PER ARC</span>
                   </div>
+                  <h2 className="font-cinzel text-3xl sm:text-5xl font-black text-white">
+                    Solo Leveling Story Sagas
+                  </h2>
+                  <p className="text-sm text-slate-400 max-w-2xl mx-auto">
+                    Click any gate expedition to open the theater and view all 20 story plot scenes, taglines, concise plots, and motivational lessons.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {SOLO_LEVELING_ARCS.map((arc) => (
+                    <div
+                      key={arc.id}
+                      onClick={() => {
+                        universeAudio.playSystemChime();
+                        setSelectedArc(arc);
+                      }}
+                      className="group relative rounded-3xl bg-slate-950/80 border border-white/10 hover:border-blue-500/60 p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 shadow-xl hover:shadow-[0_0_35px_rgba(59,130,246,0.3)] cursor-pointer"
+                    >
+                      <div className="space-y-4">
+                        <div className="relative w-full h-52 rounded-2xl overflow-hidden bg-black/60 border border-white/5 flex items-center justify-center">
+                          <img
+                            src={arc.image}
+                            alt={arc.title}
+                            className="w-full h-full object-contain filter group-hover:scale-105 transition-transform duration-500"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = './images/solo-leveling/statue-god.png';
+                            }}
+                          />
+                          <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-black/80 border border-blue-500/40 text-[10px] font-mono text-blue-400 font-bold">
+                            {arc.chapters}
+                          </div>
+                        </div>
+
+                        <div>
+                          <div className="text-xs font-mono text-blue-400 font-bold">
+                            {arc.koreanTitle} • {arc.subtitle}
+                          </div>
+                          <h3 className="font-cinzel text-2xl font-bold text-white mt-1">
+                            {arc.title}
+                          </h3>
+                        </div>
+
+                        <p className="text-xs text-slate-300 line-clamp-3 leading-relaxed">
+                          {arc.synopsis}
+                        </p>
+
+                        <div className="p-3 rounded-xl bg-black/50 border border-white/10 text-xs text-slate-300">
+                          <strong className="text-blue-400">Key Clash:</strong> {arc.keyClash}
+                        </div>
+                      </div>
+
+                      <div className="pt-4 mt-4 border-t border-white/10 flex items-center justify-between text-xs font-mono text-blue-400 font-bold">
+                        <span>EXPLORE 20 PLOT SCENES</span>
+                        <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* VIEW 3: SHADOW ARMY */}
+            {currentView === 'shadows' && (
+              <section className="space-y-10 animate-fadeIn">
+                <div className="text-center space-y-3">
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 text-xs font-mono font-bold tracking-widest uppercase">
+                    <Skull className="w-3.5 h-3.5 text-indigo-400" />
+                    <span>THE MILLION-STRONG HOST OF THE MONARCH</span>
+                  </div>
+                  <h2 className="font-cinzel text-3xl sm:text-5xl font-black text-white">
+                    Shadow Army Commanders
+                  </h2>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  {SHADOW_ARMY.map((shadow) => (
+                    <div
+                      key={shadow.id}
+                      className="p-6 rounded-3xl bg-slate-950/80 border border-indigo-500/30 space-y-4 shadow-xl hover:border-indigo-500/60 transition"
+                    >
+                      <div className="relative w-full h-56 rounded-2xl overflow-hidden bg-black/60 border border-white/5 flex items-center justify-center">
+                        <img
+                          src={shadow.image}
+                          alt={shadow.name}
+                          className="w-full h-full object-contain filter contrast-110"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = './images/solo-leveling/igris.png';
+                          }}
+                        />
+                        <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-black/80 border border-indigo-500/40 text-[10px] font-mono text-indigo-300 font-bold">
+                          {shadow.grade}
+                        </div>
+                      </div>
+
+                      <div>
+                        <div className="text-xs font-mono text-indigo-400 font-bold">
+                          {shadow.koreanName}
+                        </div>
+                        <h3 className="font-cinzel text-2xl font-bold text-white">
+                          {shadow.name}
+                        </h3>
+                      </div>
+
+                      <div className="space-y-2 text-xs text-slate-300">
+                        <div>
+                          <strong className="text-indigo-400">Origin:</strong> {shadow.origin}
+                        </div>
+                        <div>
+                          <strong className="text-blue-400">Ability:</strong> {shadow.ability}
+                        </div>
+                        <p className="text-slate-400 italic">"{shadow.quote}"</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* VIEW 4: SYSTEM SKILLS ENCYCLOPEDIA */}
+            {currentView === 'skills' && (
+              <section className="space-y-10 animate-fadeIn">
+                <div className="text-center space-y-3">
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-mono font-bold tracking-widest uppercase">
+                    <Zap className="w-3.5 h-3.5 text-blue-400" />
+                    <span>ARCHITECT & SHADOW MONARCH SYSTEM CAPABILITIES</span>
+                  </div>
+                  <h2 className="font-cinzel text-3xl sm:text-5xl font-black text-white">
+                    System Skills Encyclopedia
+                  </h2>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {SYSTEM_SKILLS.map((skill) => (
+                    <div
+                      key={skill.id}
+                      className="p-6 rounded-3xl bg-slate-950/80 border border-blue-500/30 space-y-4 shadow-xl"
+                    >
+                      <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                        <span className="px-2.5 py-0.5 rounded bg-blue-600/20 text-blue-300 text-[10px] font-mono font-bold uppercase">
+                          {skill.type}
+                        </span>
+                        <span className="text-xs font-mono text-emerald-400">
+                          {skill.manaCost}
+                        </span>
+                      </div>
+
+                      <h3 className="font-cinzel text-2xl font-bold text-white">
+                        {skill.name}
+                      </h3>
+
+                      <p className="text-xs text-slate-300 leading-relaxed">
+                        {skill.description}
+                      </p>
+
+                      <div className="p-3 rounded-xl bg-black/60 border-l-2 border-blue-400 text-xs text-blue-200">
+                        <strong>Combat Effect:</strong> {skill.effect}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* VIEW 5: MOTIVATIONAL QUOTES SANCTUARY */}
+            {currentView === 'quotes' && (
+              <section className="space-y-10 animate-fadeIn">
+                <div className="text-center space-y-3">
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-mono font-bold tracking-widest uppercase">
+                    <Quote className="w-3.5 h-3.5 text-blue-400" />
+                    <span>WORDS OF SOVEREIGNS AND TITANS</span>
+                  </div>
+                  <h2 className="font-cinzel text-3xl sm:text-5xl font-black text-white">
+                    Solo Leveling Quotes Sanctuary
+                  </h2>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  {SOLO_LEVELING_QUOTES.map((q) => (
+                    <div
+                      key={q.id}
+                      className="p-6 rounded-3xl bg-slate-950/80 border border-blue-500/25 flex flex-col justify-between space-y-4 shadow-xl"
+                    >
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={q.image}
+                            alt={q.speaker}
+                            className="w-14 h-14 rounded-2xl object-contain bg-black border border-blue-500/40"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = './images/solo-leveling/jinwoo.png';
+                            }}
+                          />
+                          <div>
+                            <h4 className="font-cinzel text-lg font-bold text-white">{q.speaker}</h4>
+                            <div className="text-xs font-mono text-blue-400">{q.title}</div>
+                          </div>
+                        </div>
+
+                        <blockquote className="p-4 rounded-2xl bg-black/60 border-l-4 border-blue-500 text-blue-100 italic text-sm leading-relaxed">
+                          "{q.quote}"
+                        </blockquote>
+
+                        <div className="text-xs text-slate-400">
+                          <strong className="text-amber-400">Context:</strong> {q.context}
+                        </div>
+                      </div>
+
+                      <div className="pt-3 border-t border-white/10 flex items-center justify-between">
+                        <span className="text-[10px] font-mono text-blue-400 uppercase font-bold">
+                          {q.tagline}
+                        </span>
+                        <button
+                          onClick={() => handleCopyQuote(q.id, q.quote)}
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900 border border-blue-500/30 text-xs font-mono text-blue-300 hover:text-white hover:border-blue-400 transition cursor-pointer"
+                        >
+                          {copiedQuoteId === q.id ? (
+                            <>
+                              <Check className="w-3.5 h-3.5 text-emerald-400" />
+                              <span className="text-emerald-400">COPIED!</span>
+                            </>
+                          ) : (
+                            <>
+                              <Copy className="w-3.5 h-3.5" />
+                              <span>COPY QUOTE</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* VIEW 6: MONARCH WEAPONS ARSENAL */}
+            {currentView === 'blades' && (
+              <section className="space-y-10 animate-fadeIn">
+                <div className="text-center space-y-3">
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-mono font-bold tracking-widest uppercase">
+                    <Swords className="w-3.5 h-3.5 text-blue-400" />
+                    <span>MYTHIC DAGGERS & DRAGON FANG BLADES</span>
+                  </div>
+                  <h2 className="font-cinzel text-3xl sm:text-5xl font-black text-white">
+                    Monarch Weapons Arsenal
+                  </h2>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  {MONARCH_WEAPONS.map((weapon) => (
+                    <div
+                      key={weapon.id}
+                      className="p-6 rounded-3xl bg-slate-950/80 border border-blue-500/30 space-y-4 shadow-xl"
+                    >
+                      <div className="flex gap-4 items-center">
+                        <div className="w-16 h-16 rounded-2xl bg-black border border-blue-500/40 flex items-center justify-center shrink-0">
+                          <Swords className="w-8 h-8 text-blue-400" />
+                        </div>
+                        <div>
+                          <div className="text-xs font-mono text-blue-400 font-bold">
+                            RANK: {weapon.rank}
+                          </div>
+                          <h3 className="font-cinzel text-xl font-bold text-white">
+                            {weapon.name}
+                          </h3>
+                          <div className="text-xs font-mono text-emerald-400 font-bold">
+                            {weapon.attackPower}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="space-y-2 text-xs text-slate-300">
+                        <div>
+                          <strong className="text-blue-400">Origin:</strong> {weapon.origin}
+                        </div>
+                        <div>
+                          <strong className="text-indigo-400">Special Trait:</strong> {weapon.specialTrait}
+                        </div>
+                        <div className="p-2 rounded-xl bg-black/60 border border-white/10 text-slate-400">
+                          <strong>Current Status:</strong> {weapon.currentStatus}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* VIEW 7: SACRED DECREE */}
+            {currentView === 'oath' && (
+              <section className="max-w-4xl mx-auto text-center space-y-8 animate-fadeIn py-12">
+                <div className="w-20 h-20 rounded-3xl bg-blue-600/20 border-2 border-blue-500/60 mx-auto flex items-center justify-center shadow-[0_0_50px_rgba(59,130,246,0.5)]">
+                  <Zap className="w-10 h-10 text-blue-400 animate-pulse" />
+                </div>
+                <div className="space-y-2">
+                  <div className="text-xs font-mono text-blue-400 font-bold tracking-widest uppercase">
+                    {SOLO_LEVELING_OATH.koreanTitle}
+                  </div>
+                  <h2 className="font-cinzelDeco text-3xl sm:text-5xl font-black text-white tracking-wider">
+                    {SOLO_LEVELING_OATH.title}
+                  </h2>
+                </div>
+
+                <div className="p-8 sm:p-12 rounded-3xl bg-slate-950/90 border-2 border-blue-500/40 shadow-2xl space-y-6">
+                  <p className="font-serif italic text-base sm:text-xl text-blue-100 leading-relaxed whitespace-pre-line">
+                    "{SOLO_LEVELING_OATH.verse}"
+                  </p>
+                  <div className="pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div className="text-xs font-mono text-indigo-400 font-bold tracking-widest">
+                      {SOLO_LEVELING_OATH.creed}
+                    </div>
+                    <div className="text-xs font-mono text-slate-400">
+                      {SOLO_LEVELING_OATH.masterMessage}
+                    </div>
+                  </div>
+                </div>
+              </section>
+            )}
+          </main>
+
+          {/* FAMILY & MENTORS TREE MODAL */}
+          {showFamilyModal && selectedHunter && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/95 backdrop-blur-2xl animate-fadeIn">
+              <div className="relative w-full max-w-4xl bg-slate-950 border-2 border-blue-500/50 rounded-3xl p-6 sm:p-8 shadow-[0_0_60px_rgba(59,130,246,0.3)] max-h-[90vh] overflow-y-auto">
+                <div className="flex items-start justify-between pb-4 border-b border-blue-500/30">
+                  <div>
+                    <div className="flex items-center gap-2 text-xs font-mono text-blue-400 tracking-widest uppercase mb-1">
+                      <Scroll className="w-4 h-4 text-blue-400" />
+                      <span>SACRED ANCESTRAL & MENTORSHIP LINEAGE</span>
+                    </div>
+                    <h3 className="font-cinzel text-2xl sm:text-4xl font-black text-white">
+                      {selectedHunter.name}’s Legendary Family Tree
+                    </h3>
+                  </div>
+                  <button
+                    onClick={() => setShowFamilyModal(false)}
+                    className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white hover:text-blue-400 transition cursor-pointer"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                <div className="mt-6 space-y-6">
+                  {selectedHunter.familyTree.map((member, idx) => (
+                    <div
+                      key={idx}
+                      className="p-5 rounded-2xl bg-slate-900/90 border border-blue-500/20 hover:border-blue-400/60 transition-all flex flex-col md:flex-row gap-5 items-start"
+                    >
+                      <div className="w-28 h-36 rounded-xl overflow-hidden border border-blue-500/40 bg-black shrink-0 relative shadow-lg">
+                        <img
+                          src={member.image}
+                          alt={member.name}
+                          className="w-full h-full object-contain filter contrast-110"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = './images/solo-leveling/jinwoo.png';
+                          }}
+                        />
+                        <div className="absolute bottom-1 inset-x-1 py-0.5 text-center bg-black/80 text-[8px] font-mono text-blue-300 font-bold uppercase rounded">
+                          {member.relation}
+                        </div>
+                      </div>
+
+                      <div className="flex-1 space-y-2 text-left">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <div>
+                            <h4 className="font-cinzel text-xl font-bold text-white">
+                              {member.name}
+                            </h4>
+                            <div className="text-xs font-mono text-blue-400 font-bold">
+                              "{member.epithet}"
+                            </div>
+                          </div>
+                          <span className="px-2.5 py-1 rounded bg-blue-500/10 border border-blue-500/30 text-[10px] font-mono text-blue-300 uppercase font-black">
+                            {member.relation}
+                          </span>
+                        </div>
+
+                        <div className="text-xs text-slate-300 leading-relaxed">
+                          <strong className="text-amber-400">Deeds & Achievements:</strong> {member.achievements}
+                        </div>
+
+                        <div className="p-3 rounded-xl bg-black/60 border-l-2 border-blue-400 text-xs italic text-blue-200">
+                          <strong>Best Shot & Quote:</strong> "{member.bestShotQuote}"
+                          <div className="mt-1 text-[11px] not-italic text-slate-400">
+                            🎬 <em>{member.bestShotScene}</em>
+                          </div>
+                        </div>
+
+                        <div className="text-xs text-slate-400">
+                          <strong className="text-blue-400">Inherited Legacy:</strong> {member.legacy}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-6 pt-4 border-t border-white/10 text-center">
+                  <button
+                    onClick={() => setShowFamilyModal(false)}
+                    className="px-8 py-2.5 rounded-full bg-blue-600 text-white font-cinzel font-bold text-xs uppercase tracking-wider hover:bg-blue-500 transition cursor-pointer"
+                  >
+                    CLOSE LINEAGE
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ARC DETAIL THEATER MODAL (20 SCENES PER ARC) */}
+          {selectedArc && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/95 backdrop-blur-2xl animate-fadeIn">
+              <div className="relative w-full max-w-5xl bg-slate-950 border-2 border-blue-500/50 rounded-3xl p-6 sm:p-8 shadow-[0_0_80px_rgba(59,130,246,0.4)] max-h-[92vh] overflow-y-auto">
+                <div className="flex items-start justify-between pb-4 border-b border-blue-500/30">
+                  <div>
+                    <div className="text-xs font-mono text-blue-400 tracking-widest uppercase mb-1">
+                      {selectedArc.koreanTitle} • {selectedArc.chapters}
+                    </div>
+                    <h3 className="font-cinzel text-2xl sm:text-4xl font-black text-white">
+                      {selectedArc.title}
+                    </h3>
+                  </div>
+                  <button
+                    onClick={() => setSelectedArc(null)}
+                    className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white hover:text-blue-400 transition cursor-pointer"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                <div className="my-6 p-4 rounded-2xl bg-black/60 border border-white/10 text-sm text-slate-300">
+                  <strong className="text-blue-400">Synopsis:</strong> {selectedArc.synopsis}
                 </div>
 
                 <div className="space-y-4">
-                  <div>
-                    <div className="flex justify-between text-xs mb-1">
-                      <span className="text-slate-400">HP (HEALTH POINTS)</span>
-                      <span className="text-blue-300 font-bold">84,200 / 84,200</span>
-                    </div>
-                    <div className="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden border border-blue-500/30">
-                      <div className="h-full bg-gradient-to-r from-blue-500 to-cyan-400 w-full" />
-                    </div>
-                  </div>
+                  <h4 className="font-cinzel text-xl font-bold text-white flex items-center gap-2">
+                    <Scroll className="w-5 h-5 text-blue-500" />
+                    <span>20 Complete Story Plot Scenes & Motivational Lessons</span>
+                  </h4>
 
-                  <div>
-                    <div className="flex justify-between text-xs mb-1">
-                      <span className="text-slate-400">MP (MANA POINTS)</span>
-                      <span className="text-purple-300 font-bold">128,450 / 128,450</span>
-                    </div>
-                    <div className="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden border border-purple-500/30">
-                      <div className="h-full bg-gradient-to-r from-purple-600 to-indigo-400 w-full" />
-                    </div>
-                  </div>
-                </div>
-              </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {selectedArc.storyPlotScenes.map((scene) => (
+                      <div
+                        key={scene.id}
+                        className="p-4 rounded-2xl bg-slate-900/90 border border-white/10 space-y-3"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="px-2.5 py-0.5 rounded bg-blue-600/30 text-blue-300 text-[10px] font-mono font-bold">
+                            SCENE {scene.sceneNumber}
+                          </span>
+                          <span className="text-[10px] font-mono text-indigo-400 uppercase font-bold">
+                            {scene.tagline}
+                          </span>
+                        </div>
 
-              {/* Stat Allocation Grid */}
-              <div className="mt-8 pt-6 border-t border-blue-500/20 grid grid-cols-2 sm:grid-cols-5 gap-4 text-center">
-                <div className="p-3 rounded-2xl bg-white/5 border border-white/10">
-                  <div className="text-[10px] text-slate-400 uppercase">STRENGTH</div>
-                  <div className="text-xl font-bold text-blue-400 mt-1">324</div>
-                </div>
-                <div className="p-3 rounded-2xl bg-white/5 border border-white/10">
-                  <div className="text-[10px] text-slate-400 uppercase">AGILITY</div>
-                  <div className="text-xl font-bold text-blue-400 mt-1">340</div>
-                </div>
-                <div className="p-3 rounded-2xl bg-white/5 border border-white/10">
-                  <div className="text-[10px] text-slate-400 uppercase">SENSE</div>
-                  <div className="text-xl font-bold text-blue-400 mt-1">315</div>
-                </div>
-                <div className="p-3 rounded-2xl bg-white/5 border border-white/10">
-                  <div className="text-[10px] text-slate-400 uppercase">VITALITY</div>
-                  <div className="text-xl font-bold text-blue-400 mt-1">290</div>
-                </div>
-                <div className="p-3 rounded-2xl bg-white/5 border border-white/10 col-span-2 sm:col-span-1">
-                  <div className="text-[10px] text-slate-400 uppercase">INTELLIGENCE</div>
-                  <div className="text-xl font-bold text-purple-400 mt-1">370</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+                        <h5 className="font-cinzel text-lg font-bold text-white">{scene.title}</h5>
 
-        {/* TAB 2: SHADOW ARMY SANCTUARY */}
-        {activeTab === 'shadows' && (
-          <div className="space-y-8">
-            <div className="text-center max-w-2xl mx-auto mb-10">
-              <h3 className="font-cinzelDeco text-3xl sm:text-4xl font-black text-white">
-                THE IMMORTAL <span className="text-blue-400">SHADOW ARMY</span>
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-400 mt-2 font-mono">
-                Extracted from the souls of fallen warriors and monarch commanders. They feel zero fatigue, regenerate indefinitely, and obey only Sung Jin-Woo.
-              </p>
-            </div>
+                        <p className="text-xs text-slate-300 leading-relaxed">
+                          {scene.storySummary}
+                        </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {SHADOW_ARMY.map((s) => (
-                <div
-                  key={s.id}
-                  onClick={() => {
-                    universeAudio.playClick(600, 0.1);
-                    setSelectedShadow(s);
-                  }}
-                  onMouseEnter={() => universeAudio.playHover()}
-                  data-cursor="pointer"
-                  className="rounded-3xl p-6 bg-slate-950/90 border border-blue-500/20 hover:border-blue-400 shadow-xl transition-all duration-300 hover:-translate-y-2 cursor-pointer flex flex-col justify-between"
-                  style={{ boxShadow: `0 10px 30px -15px ${s.glowColor}` }}
-                >
-                  <div>
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 text-[10px] font-mono font-bold uppercase border border-blue-400/40">
-                        {s.grade}
-                      </span>
-                      <span className="text-xs font-mono text-slate-400">
-                        {s.koreanName}
-                      </span>
-                    </div>
+                        <div className="p-3 rounded-xl bg-black/50 border-l-2 border-blue-400 text-xs italic text-blue-200">
+                          <strong>Motivational Takeaway:</strong> {scene.motivationLine}
+                        </div>
 
-                    <div className="relative w-full h-44 rounded-2xl bg-black/80 border border-white/10 my-3 flex items-center justify-center p-2">
-                      <img
-                        src={s.image}
-                        alt={s.name}
-                        className="max-h-full max-w-full object-contain filter drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]"
-                      />
-                    </div>
-
-                    <h4 className="font-cinzel text-xl font-bold text-white">
-                      {s.name}
-                    </h4>
-
-                    <div className="text-[11px] font-mono text-slate-400 mt-1">
-                      Origin: <span className="text-slate-200">{s.origin.split('/')[0]}</span>
-                    </div>
-
-                    <p className="text-xs font-mono italic text-blue-300 mt-3 line-clamp-2">
-                      "{s.quote}"
-                    </p>
-                  </div>
-
-                  <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs text-blue-400 font-bold">
-                    <span>VIEW DOSSIER</span>
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* TAB 3: HUNTER DOSSIER */}
-        {activeTab === 'hunters' && (
-          <div className="space-y-8">
-            <div className="text-center max-w-2xl mx-auto mb-10">
-              <h3 className="font-cinzelDeco text-3xl sm:text-4xl font-black text-white">
-                S-RANK & <span className="text-blue-400">NATIONAL LEVEL HUNTERS</span>
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-400 mt-2 font-mono">
-                The apex defenders of humanity. Individuals whose mana cores possess destructive capacity comparable to national military divisions.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {TOP_HUNTERS.map((h) => (
-                <div
-                  key={h.id}
-                  className="rounded-3xl p-6 bg-slate-950/90 border border-white/10 hover:border-blue-400/50 shadow-xl flex flex-col justify-between"
-                >
-                  <div>
-                    <span className="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-mono text-amber-300 font-bold uppercase">
-                      {h.rank}
-                    </span>
-
-                    <div className="relative w-full h-44 rounded-2xl bg-black/80 border border-white/10 my-4 flex items-center justify-center p-2">
-                      <img
-                        src={h.image}
-                        alt={h.name}
-                        className="max-h-full max-w-full object-contain filter drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]"
-                      />
-                    </div>
-
-                    <h4 className="font-cinzel text-xl font-bold text-white">
-                      {h.name}
-                    </h4>
-                    <div className="text-xs font-mono text-blue-400 mt-0.5 font-bold">
-                      {h.title}
-                    </div>
-
-                    <div className="mt-3 text-xs space-y-1 font-mono text-slate-300">
-                      <div>Guild: <strong className="text-white">{h.guild}</strong></div>
-                      <div>Class: <strong className="text-slate-200">{h.classType}</strong></div>
-                    </div>
-
-                    <p className="text-xs text-slate-300 mt-3 leading-relaxed">
-                      {h.description}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* TAB 4: GATES & DUNGEONS */}
-        {activeTab === 'gates' && (
-          <div className="space-y-8">
-            <div className="text-center max-w-2xl mx-auto mb-10">
-              <h3 className="font-cinzelDeco text-3xl sm:text-4xl font-black text-white">
-                DIMENSIONAL <span className="text-blue-400">GATES & RAIDS</span>
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-400 mt-2 font-mono">
-                Portals linking our reality with dungeon realms. Uncleared gates trigger Dungeon Breaks where monsters invade human territory.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {GATES_AND_DUNGEONS.map((g) => (
-                <div
-                  key={g.id}
-                  className="rounded-3xl overflow-hidden bg-slate-950/90 border border-white/10 hover:border-blue-400/50 shadow-xl flex flex-col justify-between"
-                >
-                  <div className="relative h-44 w-full bg-black/60 overflow-hidden">
-                    <img
-                      src={g.image}
-                      alt={g.name}
-                      className="w-full h-full object-cover filter contrast-110 brightness-90 hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-black/60" />
-                    <div className="absolute top-3 left-3 px-2.5 py-1 rounded bg-black/80 text-[10px] font-mono text-blue-400 font-bold border border-white/10">
-                      {g.rank}
-                    </div>
-                  </div>
-
-                  <div className="p-6 flex-1 flex flex-col justify-between">
-                    <div>
-                      <h4 className="font-cinzel text-xl font-bold text-white mb-1">
-                        {g.name}
-                      </h4>
-                      <div className="text-[10px] font-mono text-purple-400 uppercase tracking-widest font-bold mb-3">
-                        BOSS: {g.boss}
+                        {scene.keyDialogue && (
+                          <div className="text-[11px] font-mono text-slate-400">
+                            💬 <strong>{scene.speaker}:</strong> {scene.keyDialogue}
+                          </div>
+                        )}
                       </div>
-
-                      <p className="text-xs text-slate-300 leading-relaxed mb-4">
-                        {g.description}
-                      </p>
-                    </div>
-
-                    <div className="pt-3 border-t border-white/10 text-xs font-mono text-slate-400">
-                      Significance: <span className="text-blue-300 font-bold">{g.significance}</span>
-                    </div>
+                    ))}
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </main>
 
-      {/* Expanded Shadow Soldier Modal */}
-      {selectedShadow && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl animate-fadeIn font-mono">
-          <div className="relative w-full max-w-xl bg-slate-950 border border-blue-500/50 rounded-3xl p-6 sm:p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
-            <div className="flex items-start justify-between pb-4 border-b border-white/10">
-              <div>
-                <span className="text-xs font-mono uppercase text-blue-400 font-bold">
-                  SHADOW GRADE: {selectedShadow.grade}
-                </span>
-                <h3 className="font-cinzel text-2xl sm:text-3xl font-black text-white mt-0.5">
-                  {selectedShadow.name}
-                </h3>
-                <div className="text-xs font-mono text-slate-400">
-                  {selectedShadow.koreanName}
+                <div className="mt-8 pt-4 border-t border-white/10 text-center">
+                  <button
+                    onClick={() => setSelectedArc(null)}
+                    className="px-8 py-2.5 rounded-full bg-blue-600 text-white font-cinzel font-bold text-xs uppercase tracking-wider hover:bg-blue-500 transition cursor-pointer"
+                  >
+                    CLOSE GATE THEATER
+                  </button>
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* FOOTER */}
+          <footer className="relative z-10 border-t border-white/10 bg-black/90 py-10 px-4 sm:px-8 mt-16 text-center space-y-6">
+            <div className="max-w-4xl mx-auto space-y-4">
+              <div className="flex items-center justify-center gap-3">
+                <Zap className="w-5 h-5 text-blue-400" />
+                <span className="font-cinzelDeco text-lg font-bold tracking-widest text-white">
+                  SOLO LEVELING • 나 혼자만 레벨업
+                </span>
+                <Skull className="w-5 h-5 text-indigo-400" />
+              </div>
+              <blockquote className="font-serif italic text-xs sm:text-sm text-blue-200/90 max-w-2xl mx-auto">
+                "I will protect what is mine... Even if it means turning the entire world into my battlefield."
+                <footer className="text-[10px] font-mono text-blue-400 mt-1 uppercase not-italic">
+                  — Sung Jin-Woo
+                </footer>
+              </blockquote>
 
               <button
-                onClick={() => setSelectedShadow(null)}
-                className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white cursor-pointer"
+                onClick={scrollToTop}
+                className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-slate-900 border border-blue-500/30 hover:border-blue-400 text-blue-300 text-xs font-bold tracking-widest uppercase transition-all shadow-lg hover:scale-105 cursor-pointer"
               >
-                <X className="w-5 h-5" />
+                <ArrowUp className="w-3.5 h-3.5" />
+                <span>RETURN TO CARTENON TEMPLE</span>
               </button>
-            </div>
 
-            <div className="my-5 relative h-48 rounded-2xl bg-black/80 border border-white/10 flex items-center justify-center p-2">
-              <img
-                src={selectedShadow.image}
-                alt={selectedShadow.name}
-                className="max-h-full max-w-full object-contain filter drop-shadow-[0_0_15px_rgba(59,130,246,0.6)]"
-              />
-            </div>
-
-            <div className="space-y-4 text-xs">
-              <div className="p-4 rounded-2xl bg-blue-500/10 border border-blue-500/30">
-                <div className="text-[10px] font-mono text-blue-400 uppercase font-bold mb-1">
-                  TACTICAL ABILITY
-                </div>
-                <div className="text-sm text-white font-bold">
-                  {selectedShadow.ability}
-                </div>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-white/5 border border-white/10">
-                <div className="text-[10px] font-mono text-slate-400 uppercase font-bold mb-1">
-                  ORIGIN OF EXTRACTION
-                </div>
-                <p className="text-slate-200 leading-relaxed">
-                  {selectedShadow.origin}
-                </p>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-white/5 border border-white/10">
-                <div className="text-[10px] font-mono text-slate-400 uppercase font-bold mb-1">
-                  COMMANDER SUMMARY
-                </div>
-                <p className="text-slate-200 leading-relaxed">
-                  {selectedShadow.description}
-                </p>
+              <div className="text-[10px] font-mono text-slate-500 tracking-widest uppercase">
+                SOLO LEVELING © CHUGONG, DUBU (REDICE STUDIO) / D&C MEDIA, A-1 PICTURES • NON-PROFIT FAN TRIBUTE
               </div>
             </div>
-
-            <button
-              onClick={() => setSelectedShadow(null)}
-              className="w-full mt-6 py-2.5 rounded-xl bg-blue-600 text-white font-cinzel font-bold text-sm tracking-wider uppercase hover:bg-blue-500 transition cursor-pointer"
-            >
-              CLOSE COMMAND DOSSIER
-            </button>
-          </div>
-        </div>
+          </footer>
+        </>
       )}
     </div>
   );
 };
-
